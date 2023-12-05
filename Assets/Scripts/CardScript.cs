@@ -22,7 +22,9 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 	/// <param name="eventData">クリック情報</param>
 	public void OnPointerDown(PointerEventData eventData)
 	{
-		Debug.Log("カードがタップされました");
+		//Debug.Log("カードがタップされました");
+		//クリックした座標を保存
+		_cursorPosition = gameObject.transform.position - GetMouseWorldPos();
 	}
 	/// <summary>
 	/// クリックが終わった時に実行する
@@ -30,6 +32,25 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 	/// <param name="eventData">クリック情報</param>
 	public void OnPointerUp(PointerEventData eventData)
 	{
-		Debug.Log("カードへのタップを終了しました");
+		//Debug.Log("カードへのタップを終了しました");
+	}
+	/// <summary>
+	/// ドラッグしている間呼び出す
+	/// </summary>
+    public void OnMouseDrag()
+    {
+		Debug.Log("ドラッグ");
+		//オブジェクトを移動させる
+		transform.position = GetMouseWorldPos() + _cursorPosition;
+	}
+	/// <summary>
+	/// スクリーン座標からワールド座標に変化する
+	/// </summary>
+	/// <returns>ワールド座標</returns>
+    private Vector3 GetMouseWorldPos()
+    {
+		Vector3 mousePos = Input.mousePosition;
+		mousePos.z = -Camera.main.transform.position.z;
+		return Camera.main.ScreenToWorldPoint(mousePos);
 	}
 }
