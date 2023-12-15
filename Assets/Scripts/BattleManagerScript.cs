@@ -21,9 +21,4 @@ public class BattleManagerScript : MonoBehaviour
         _fieldAreaScript.InBattleManager(this);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

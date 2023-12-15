@@ -9,48 +9,71 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using DG.Tweening;
 
-public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
 {
-	//カーソルの位置
-	private Vector3 _cursorPosition = default;
+    private RectTransform _rectTransform;
+    // フィールド管理クラス
+    [SerializeField]
+    private FieldAreaManagerScript _fieldAreaScript = default;
 
+    // 基本座標(ドラッグ終了後に戻ってくる座標)
+    private Vector2 _basePos = default;
+    // 移動用のTween
+    private Tween _moveTween = default;
 
-	/// <summary>
-	/// クリックしたときに実行する
-	/// </summary>
-	/// <param name="eventData">クリック情報</param>
-	public void OnPointerDown(PointerEventData eventData)
-	{
-		//Debug.Log("カードがタップされました");
-		//クリックした座標を保存
-		_cursorPosition = gameObject.transform.position - GetMouseWorldPos();
-	}
-	/// <summary>
-	/// クリックが終わった時に実行する
-	/// </summary>
-	/// <param name="eventData">クリック情報</param>
-	public void OnPointerUp(PointerEventData eventData)
-	{
-		//Debug.Log("カードへのタップを終了しました");
-	}
-	/// <summary>
-	/// ドラッグしている間呼び出す
-	/// </summary>
-    public void OnMouseDrag()
+    // カード移動アニメーション時間
+    private const float MoveTime = 0.4f;
+    // 初期化処理
+    public void Init(FieldAreaManagerScript _fieldManager)
     {
-		Debug.Log("ドラッグ");
-		//オブジェクトを移動させる
-		transform.position = GetMouseWorldPos() + _cursorPosition;
-	}
-	/// <summary>
-	/// スクリーン座標からワールド座標に変化する
+        // 参照取得
+        _fieldAreaScript = _fieldManager;
+        // 変数初期化
+        _basePos = this.gameObject.transform.position;
+    }
+    /// <summary>
+	/// 基本座標までカードを移動させる
 	/// </summary>
-	/// <returns>ワールド座標</returns>
-    private Vector3 GetMouseWorldPos()
+	public void BackToBasePos()
     {
-		Vector3 mousePos = Input.mousePosition;
-		mousePos.z = -Camera.main.transform.position.z;
-		return Camera.main.ScreenToWorldPoint(mousePos);
-	}
+        // 既に実行中の移動アニメーションがあれば停止
+        if (_moveTween != null)
+        {
+            _moveTween.Kill();
+        }
+
+        // 指定地点まで移動するアニメーション(DOTween)
+        _moveTween = _rectTransform
+            .DOMove(_basePos, MoveTime) // 移動Tween
+            .SetEase(Ease.OutQuart);   // 変化の仕方を指定
+    }
+    /// <summary>
+    /// クリックしたときに実行する
+    /// </summary>
+    /// <param name="eventData">クリック情報</param>
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        // クリック下カードを代入する
+        _fieldAreaScript.StartDragging(this);
+        Debug.Log("クリック");
+    }
+    /// <summary>
+    /// クリックが終わった時に実行する
+    /// </summary>
+    /// <param name="eventData">クリック情報</param>
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        //クリック終了処理
+        BackToBasePos();
+        Debug.Log("話した");
+    }
+    public void OnDrag(PointerEventData eventData)
+    {
+        Debug.Log("ドラッグ");
+        Vector3 TargetPos = Camera.main.ScreenToWorldPoint(eventData.position);
+        TargetPos.z = 0;
+        transform.position = TargetPos;
+    }
 }
