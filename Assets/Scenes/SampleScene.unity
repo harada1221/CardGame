@@ -695,6 +695,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2040999127}
     m_Modifications:
+    - target: {fileID: 5313158764347893567, guid: ecfbb23cc1594934995bc42a2b59c963, type: 3}
+      propertyPath: _fieldAreaScript
+      value: 
+      objectReference: {fileID: 1110909677}
     - target: {fileID: 6617404776448777167, guid: ecfbb23cc1594934995bc42a2b59c963, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

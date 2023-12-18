@@ -45,8 +45,7 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         }
 
         // 指定地点まで移動するアニメーション(DOTween)
-        _moveTween = _rectTransform
-            .DOMove(_basePos, MoveTime) // 移動Tween
+        this.transform.DOMove(_basePos, MoveTime) // 移動Tween
             .SetEase(Ease.OutQuart);   // 変化の仕方を指定
     }
     /// <summary>
