@@ -15,7 +15,7 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
 {
     private RectTransform _rectTransform;
     // フィールド管理クラス
-    [SerializeField]
+    [SerializeField,Header("フィールドを管理するスクリプト")]
     private FieldAreaManagerScript _fieldAreaScript = default;
 
     // 基本座標(ドラッグ終了後に戻ってくる座標)
@@ -25,7 +25,10 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
 
     // カード移動アニメーション時間
     private const float MoveTime = 0.4f;
-    // 初期化処理
+    /// <summary>
+    /// 初期化処理
+    /// </summary>
+    /// <param name="_fieldManager">フィールドマネージャー</param>
     public void Init(FieldAreaManagerScript _fieldManager)
     {
         // 参照取得
@@ -68,6 +71,11 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         BackToBasePos();
         Debug.Log("話した");
     }
+
+    /// <summary>
+    /// ドラック中の処理
+    /// </summary>
+    /// <param name="eventData">ドラック処理</param>
     public void OnDrag(PointerEventData eventData)
     {
         Debug.Log("ドラッグ");

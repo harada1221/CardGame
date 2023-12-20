@@ -16,17 +16,21 @@ public class DammyHandScript : MonoBehaviour
     //生成するオブジェクトのQueue
     private Queue<GameObject> _handPrehub = default;
 
+    /// <summary>
+    /// 初期化処理
+    /// </summary>
     private void Start()
     {
+        GameObject hand = default;
         //カード生成ループ
         for (int i = 0; i < _maxCount; i++)
         {
             // オブジェクト作成
-            GameObject obj = Instantiate(_dammyHand, transform);
+            hand = Instantiate(_dammyHand, transform);
             //Queueに格納
-            _handPrehub.Enqueue(obj);
+            _handPrehub.Enqueue(hand);
             // オブジェクトをfalseにする
-            obj.SetActive(false);
+            hand.SetActive(false);
         }
     }
     /// <summary>
@@ -35,19 +39,18 @@ public class DammyHandScript : MonoBehaviour
     /// <param name="value">設定枚数</param>
     public void SetHandNum(int value)
     {
-        // 初回実行時
+        //初回実行時
         if (_dammyHandList == null)
         {
-            // リスト新規生成
+            //リスト新規生成
             _dammyHandList = new List<Transform>();
             AddHandObj(value);
         }
         else
         {
-            // 現在から変化する枚数を計算
+            //現在から変化する枚数を計算
             int differenceNum = value - _dammyHandList.Count;
-            // ダミー手札作成・削除
-            // 手札が増えるならダミー手札作成
+            //手札が増えるならダミー手札作成
             if (differenceNum > 0)
             {
                 AddHandObj(differenceNum);
@@ -65,22 +68,22 @@ public class DammyHandScript : MonoBehaviour
     /// </summary>
     private void AddHandObj(int value)
     {
-        GameObject obj = _handPrehub.Dequeue();
+        GameObject hand = _handPrehub.Dequeue();
 
-        // 追加枚数分オブジェクト作成
+        //追加枚数分オブジェクト作成
         for (int i = 0; i < value; i++)
         {
-            // リストになかったら生成
-            if (obj == null)
+            //リストになかったら生成
+            if (hand == null)
             {
-                // オブジェクト作成
-                obj = Instantiate(_dammyHand, transform);
+                //オブジェクト作成
+                hand = Instantiate(_dammyHand, transform);
                 //Queueに格納
-                _handPrehub.Enqueue(obj);
+                _handPrehub.Enqueue(hand);
             }
-            obj.SetActive(true);
-            // リストに追加
-            _dammyHandList.Add(obj.transform);
+            hand.SetActive(true);
+            //リストに追加
+            _dammyHandList.Add(hand.transform);
         }
     }
     /// <summary>
@@ -88,20 +91,20 @@ public class DammyHandScript : MonoBehaviour
     /// </summary>
     private void RemoveHandObj(int value)
     {
-        // 削除枚数を正数で取得
+        //削除枚数を正数で取得
         value = Mathf.Abs(value);
-        // 削除枚数分オブジェクト削除
+        //削除枚数分オブジェクト削除
         for (int i = 0; i < value; i++)
         {
             if (_dammyHandList.Count <= 0)
             {
                 break;
             }
-            // オブジェクト削除
+            //オブジェクト非表示
             _dammyHandList[0].gameObject.SetActive(false);
             //Queueに格納
             _handPrehub.Enqueue(_dammyHandList[0].gameObject);
-            // リストから削除
+            //リストから削除
             _dammyHandList.RemoveAt(0);
         }
     }
@@ -110,16 +113,17 @@ public class DammyHandScript : MonoBehaviour
     /// </summary>
     public Vector2 GetHandPos(int index)
     {
+        //範囲外は0に戻す
         if (index < 0 || index >= _dammyHandList.Count)
         {
             return Vector2.zero;
         }
-        // ダミー手札の座標を返す
+        //ダミー手札の座標を返す
         return _dammyHandList[index].position;
     }
 
     /// <summary>
-    /// レイアウトの自動整列機能を即座に適用する
+    /// レイアウトの自動整列機能を適用する
     /// </summary>
     public void ApplyLayout()
     {
