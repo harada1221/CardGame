@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public class DammyHandScript : MonoBehaviour
 {
-    [SerializeField, Header("ダミー手札整列用")]
+    [SerializeField, Header("手札整列用")]
     private HorizontalLayoutGroup _layoutGroup = default;
-    [SerializeField, Header("ダミー手札プレハブ")]
+    [SerializeField, Header("手札プレハブ")]
     private GameObject _dammyHand = default;
     [SerializeField, Header("生成する数")]
     private int _maxCount = default;
