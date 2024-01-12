@@ -9,30 +9,9 @@ public class DammyHandScript : MonoBehaviour
     private HorizontalLayoutGroup _layoutGroup = default;
     [SerializeField, Header("手札プレハブ")]
     private GameObject _dammyHand = default;
-    [SerializeField, Header("生成する数")]
-    private int _maxCount = default;
     //ダミー手札リスト
     private List<Transform> _dammyHandList = default;
-    //生成するオブジェクトのQueue
-    private Queue<GameObject> _handPrehub = default;
-
-    /// <summary>
-    /// 初期化処理
-    /// </summary>
-    private void Start()
-    {
-        GameObject hand = default;
-        //カード生成ループ
-        for (int i = 0; i < _maxCount; i++)
-        {
-            // オブジェクト作成
-            hand = Instantiate(_dammyHand, transform);
-            //Queueに格納
-            _handPrehub.Enqueue(hand);
-            // オブジェクトをfalseにする
-            hand.SetActive(false);
-        }
-    }
+   
     /// <summary>
     /// 指定の枚数になるようダミー手札を作成または削除する
     /// </summary>
@@ -68,22 +47,14 @@ public class DammyHandScript : MonoBehaviour
     /// </summary>
     private void AddHandObj(int value)
     {
-        GameObject hand = _handPrehub.Dequeue();
 
         //追加枚数分オブジェクト作成
         for (int i = 0; i < value; i++)
         {
-            //リストになかったら生成
-            if (hand == null)
-            {
-                //オブジェクト作成
-                hand = Instantiate(_dammyHand, transform);
-                //Queueに格納
-                _handPrehub.Enqueue(hand);
-            }
-            hand.SetActive(true);
+            // オブジェクト作成
+            GameObject obj = Instantiate(_dammyHand, transform);
             //リストに追加
-            _dammyHandList.Add(hand.transform);
+            _dammyHandList.Add(obj.transform);
         }
     }
     /// <summary>
@@ -100,10 +71,8 @@ public class DammyHandScript : MonoBehaviour
             {
                 break;
             }
-            //オブジェクト非表示
-            _dammyHandList[0].gameObject.SetActive(false);
-            //Queueに格納
-            _handPrehub.Enqueue(_dammyHandList[0].gameObject);
+            // オブジェクト削除
+            Destroy(_dammyHandList[0].gameObject);
             //リストから削除
             _dammyHandList.RemoveAt(0);
         }
@@ -119,7 +88,7 @@ public class DammyHandScript : MonoBehaviour
             return Vector2.zero;
         }
         //ダミー手札の座標を返す
-        return _dammyHandList[index].position;
+        return _dammyHandList[index].transform.position;
     }
 
     /// <summary>

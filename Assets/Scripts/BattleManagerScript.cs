@@ -13,9 +13,12 @@ public class BattleManagerScript : MonoBehaviour
 {
     //フィールドの管理クラス
     private FieldAreaManagerScript _fieldAreaScript = default;
-    // Start is called before the first frame update
+    /// <summary>
+    /// 初期化処理
+    /// </summary>
     void Start()
     {
+        //FieldAreaManagerScriptを取得する
         _fieldAreaScript = GameObject.FindAnyObjectByType<FieldAreaManagerScript>();
         // 管理下コンポーネント初期化
         _fieldAreaScript.InBattleManager(this);

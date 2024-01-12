@@ -11,30 +11,42 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using DG.Tweening;
 
-public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
+public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
-    private RectTransform _rectTransform;
     // フィールド管理クラス
-    [SerializeField,Header("フィールドを管理するスクリプト")]
     private FieldAreaManagerScript _fieldAreaScript = default;
 
-    // 基本座標(ドラッグ終了後に戻ってくる座標)
+    [SerializeField, Header("オブジェクトのRectTransform")]
+    public RectTransform _rectTransform = default;
+
+    // 各種変数
+    // ドラッグ終了後に戻ってくる座標
     private Vector2 _basePos = default;
-    // 移動用のTween
+    // 移動Tween
     private Tween _moveTween = default;
+    private CardZoneScript.ZoneType _nowZone = default;
 
     // カード移動アニメーション時間
-    private const float MoveTime = 0.4f;
+    const float MoveTime = 0.4f;
+
+    public CardZoneScript.ZoneType GetNowZone { get => _nowZone; }
+
     /// <summary>
     /// 初期化処理
     /// </summary>
     /// <param name="_fieldManager">フィールドマネージャー</param>
-    public void Init(FieldAreaManagerScript _fieldManager)
+    /// <param name="initPos">初期座標</param>
+    public void Init(FieldAreaManagerScript _fieldManager, Vector2 initPos)
     {
-        // 参照取得
+        //参照取得
         _fieldAreaScript = _fieldManager;
-        // 変数初期化
-        _basePos = this.gameObject.transform.position;
+        //変数初期化
+        //初期位置に移動
+        _rectTransform.position = initPos;
+        //初期位置固定
+        _basePos = initPos;
+        //初期の場所
+        _nowZone = CardZoneScript.ZoneType.Hand;
     }
     /// <summary>
 	/// 基本座標までカードを移動させる
@@ -46,10 +58,24 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         {
             _moveTween.Kill();
         }
-
         // 指定地点まで移動するアニメーション(DOTween)
-        this.transform.DOMove(_basePos, MoveTime) // 移動Tween
-            .SetEase(Ease.OutQuart);   // 変化の仕方を指定
+        _moveTween = _rectTransform
+            .DOMove(_basePos, MoveTime) // 移動Tween
+            .SetEase(Ease.OutQuart);    // 変化の仕方を指定
+    }
+    /// <summary>
+	/// カードを指定のゾーンに設置する
+	/// </summary>
+	/// <param name="zoneType">対象カードゾーン</param>
+	/// <param name="targetPos">対象座標</param>
+	public void PutToZone(CardZoneScript.ZoneType zoneType, Vector2 targetPos)
+    {
+        //座標を取得
+        _basePos = targetPos;
+        //初期位置に戻す
+        BackToBasePos();
+        //カードゾーンの種類を保存
+        _nowZone = zoneType;
     }
     /// <summary>
     /// クリックしたときに実行する
@@ -57,9 +83,8 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
     /// <param name="eventData">クリック情報</param>
     public void OnPointerDown(PointerEventData eventData)
     {
-        // クリック下カードを代入する
+        // クリック開始処理
         _fieldAreaScript.StartDragging(this);
-        Debug.Log("クリック");
     }
     /// <summary>
     /// クリックが終わった時に実行する
@@ -68,19 +93,6 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
     public void OnPointerUp(PointerEventData eventData)
     {
         //クリック終了処理
-        BackToBasePos();
-        Debug.Log("話した");
-    }
-
-    /// <summary>
-    /// ドラック中の処理
-    /// </summary>
-    /// <param name="eventData">ドラック処理</param>
-    public void OnDrag(PointerEventData eventData)
-    {
-        Debug.Log("ドラッグ");
-        Vector3 TargetPos = Camera.main.ScreenToWorldPoint(eventData.position);
-        TargetPos.z = 0;
-        transform.position = TargetPos;
+        _fieldAreaScript.EndDragging();
     }
 }
