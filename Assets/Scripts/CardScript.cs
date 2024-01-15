@@ -13,24 +13,47 @@ using DG.Tweening;
 
 public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
-    // フィールド管理クラス
+    //フィールド管理クラス
     private FieldAreaManagerScript _fieldAreaScript = default;
 
     [SerializeField, Header("オブジェクトのRectTransform")]
     public RectTransform _rectTransform = default;
 
-    // 各種変数
-    // ドラッグ終了後に戻ってくる座標
+    //ドラッグ終了後に戻ってくる座標
     private Vector2 _basePos = default;
-    // 移動Tween
+    //移動Tween
     private Tween _moveTween = default;
+    //カードゾーンの種類
     private CardZoneScript.ZoneType _nowZone = default;
 
-    // カード移動アニメーション時間
-    const float MoveTime = 0.4f;
+    //基になるカードデータ
+    private CardDataSO _cardDate = default;
+    //カード効果のリスト
+    private List<CardEffectDefineScript> _cardEffects = default;
+    //カードの強度
+    private int _forcePoint = default;
+    //カードを使用キャラクター
+    private int _controllerCharaID = default;
+
+    //カード移動アニメーション時間
+    private const float MoveTime = 0.4f;
+    //キャラクターID定数
+    //戦闘内のキャラクター人数
+    public const int CharaNum = 2;
+    //キャラクターID:主人公(プレイヤーキャラ)
+    public const int CharaID_Player = 0;
+    //キャラクターID:敵
+    public const int CharaID_Enemy = 1;
+    //キャラクターID:(無し)
+    public const int CharaID_None = -1;
+    //カードアイコンの最大数
+    private const int MaxIcons = 6;
+    //カード効果の最大数
+    private const int MaxEffects = 6;
 
     public CardZoneScript.ZoneType GetNowZone { get => _nowZone; }
 
+    #region 初期処理
     /// <summary>
     /// 初期化処理
     /// </summary>
@@ -47,11 +70,36 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         _basePos = initPos;
         //初期の場所
         _nowZone = CardZoneScript.ZoneType.Hand;
+        //リスト生成
+        _cardEffects = new List<CardEffectDefineScript>();
     }
     /// <summary>
-	/// 基本座標までカードを移動させる
-	/// </summary>
-	public void BackToBasePos()
+    /// カードのパラメータを取得する
+    /// </summary>
+    /// <param name="cardData"></param>
+    /// <param name="ControllerCharaID"></param>
+    public void SetInitialCardData(CardDataSO cardData, int ControllerCharaID)
+    {
+        //カードデータ取得
+        _cardDate = cardData;
+
+        //カード効果リスト
+        foreach (CardEffectDefineScript item in cardData.GetEffectList)
+        {
+            AddCardEffect(item);
+        }
+        //強度
+        SetForcePoint(cardData.GetForce);
+        // カード使用者データ
+        _controllerCharaID = ControllerCharaID;
+    }
+    #endregion
+
+    #region 移動処理
+    /// <summary>
+    /// 基本座標までカードを移動させる
+    /// </summary>
+    public void BackToBasePos()
     {
         // 既に実行中の移動アニメーションがあれば停止
         if (_moveTween != null)
@@ -77,6 +125,9 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         //カードゾーンの種類を保存
         _nowZone = zoneType;
     }
+    #endregion
+
+    #region クリック処理
     /// <summary>
     /// クリックしたときに実行する
     /// </summary>
@@ -95,4 +146,35 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         //クリック終了処理
         _fieldAreaScript.EndDragging();
     }
+    #endregion
+
+    #region パラメータ変更
+    /// <summary>
+	/// カード効果を新規追加する
+	/// </summary>
+	/// <param name="newEffect">効果の種類・数値データ</param>
+	private void AddCardEffect(CardEffectDefineScript newEffect)
+    {
+        // カード効果数上限なら終了
+        if (_cardEffects.Count >= MaxEffects)
+        {
+            return;
+        }
+
+        // 効果データを新規作成する
+        CardEffectDefineScript effectData = new CardEffectDefineScript();
+        effectData.GetEffect = newEffect.GetEffect;
+        effectData.GetValue = newEffect.GetValue;
+        // 効果リストに追加
+        _cardEffects.Add(effectData);
+    }
+    /// <summary>
+	/// カードの強度をセットする
+	/// </summary>
+	public void SetForcePoint(int forcevalue)
+    {
+        // パラメータをセット
+        _forcePoint = forcevalue;
+    }
+    #endregion
 }

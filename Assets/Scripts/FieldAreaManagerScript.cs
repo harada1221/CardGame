@@ -13,6 +13,7 @@ using DG.Tweening;
 
 public class FieldAreaManagerScript : MonoBehaviour
 {
+    #region 変数宣言
     [SerializeField, Header("CanvasのRectTransform")]
     private RectTransform _canvasRectTransform = default;
     [SerializeField, Header("メインカメラ")]
@@ -39,13 +40,40 @@ public class FieldAreaManagerScript : MonoBehaviour
     //手札補充中フラグ
     private bool isDraw = false;
 
+    //rayの長さ
+    const float _rayDistance = 10.0f;
     // ドロー間の時間間隔
     const float DrawIntervalTime = 0.1f;
+    #endregion
 
+    #region 初期化処理
     private void Start()
     {
         _dammyHand = GameObject.FindObjectOfType<DammyHandScript>();
     }
+    /// <summary>
+    /// 初期化処理
+    /// </summary>
+    /// <param name="battleManager">使うBattleManagerScript</param>
+    public void InBattleManager(BattleManagerScript battleManager)
+    {
+        //送られてきたBattleManagerScriptを格納する
+        _battleManager = battleManager;
+        //変数初期化
+        _cardInstances = new List<CardScript>();
+
+        // デバッグ用ドロー処理(遅延実行)
+        DOVirtual.DelayedCall(
+            1.0f, // 1.0秒遅延
+            () =>
+            {
+                DrawCardsUntilNum(5);
+            }
+        );
+    }
+    #endregion
+
+    #region 更新処理
     /// <summary>
     /// 更新処理
     /// </summary>
@@ -69,32 +97,14 @@ public class FieldAreaManagerScript : MonoBehaviour
             ishandSort = false;
         }
     }
-    /// <summary>
-    /// 初期化処理
-    /// </summary>
-    /// <param name="battleManager">使うBattleManagerScript</param>
-    public void InBattleManager(BattleManagerScript battleManager)
-    {
-        //送られてきたBattleManagerScriptを格納する
-        _battleManager = battleManager;
-        //変数初期化
-        _cardInstances = new List<CardScript>();
+    #endregion
 
-        // デバッグ用ドロー処理(遅延実行)
-        DOVirtual.DelayedCall(
-            1.0f, // 1.0秒遅延
-            () =>
-            {
-                DrawCardsUntilNum(5);
-            }
-        );
-    }
     #region プレイヤー側手札の処理
     /// <summary>
-	/// デッキからカードを１枚引き手札に加える
-	/// </summary>
-	/// <param name="handID">対象手札番号</param>
-	private void DrawCard(int handID)
+    /// デッキからカードを１枚引き手札に加える
+    /// </summary>
+    /// <param name="handID">対象手札番号</param>
+    private void DrawCard(int handID)
     {
         // オブジェクト作成
         GameObject obj = Instantiate(_cardPrefab, _cardsParentTransForm);
@@ -132,6 +142,7 @@ public class FieldAreaManagerScript : MonoBehaviour
 
         //手札UIに枚数を指定
         _dammyHand.SetHandNum(nowHandNum + drawNum);
+
         //連続でカードを引く
         Sequence drawSequence = DOTween.Sequence();
         //手札補充中
@@ -154,7 +165,6 @@ public class FieldAreaManagerScript : MonoBehaviour
 	/// </summary>
 	private void AlignHandCards()
     {
-        //手札整列処理
         //手札内番号
         int index = 0;
         // ダミー手札を整列
@@ -178,8 +188,11 @@ public class FieldAreaManagerScript : MonoBehaviour
         int nowHandNum = 0;
         foreach (CardScript item in _cardInstances)
         {
+            //カードが手札にあるか
             if (item.GetNowZone == CardZoneScript.ZoneType.Hand)
+            {
                 nowHandNum++;
+            }
         }
         // ダミー手札に枚数を指定
         _dammyHand.SetHandNum(nowHandNum);
@@ -196,7 +209,7 @@ public class FieldAreaManagerScript : MonoBehaviour
 	public void StartDragging(CardScript dragCard)
     {
         //手札補充演出中なら終了
-        if (isDraw==true)
+        if (isDraw == true)
         {
             return;
         }
@@ -212,7 +225,7 @@ public class FieldAreaManagerScript : MonoBehaviour
     {
         //クリック位置を取得
         Vector2 clickPos = Input.mousePosition;
-        //タップ座標をスクリーン座標をCanvasのローカル座標に変換
+        //クリック座標をスクリーン座標をCanvasのローカル座標に変換
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             _canvasRectTransform, //CanvasのRectTransform
             clickPos,             //変換元座標データ
@@ -227,8 +240,70 @@ public class FieldAreaManagerScript : MonoBehaviour
 	/// </summary>
 	public void EndDragging()
     {
-        //カードを元の位置に戻す
-        _draggingCard.BackToBasePos();
+        //オブジェクトのスクリーン座標を取得する
+        Vector3 pos = RectTransformUtility.WorldToScreenPoint(_mainCamera, _draggingCard.transform.position);
+        //メインカメラから上記で取得した座標に向けてRayを飛ばす
+        Ray ray = _mainCamera.ScreenPointToRay(pos);
+
+        //ドラッグ先カードゾーン
+        CardZoneScript targetZone = default;
+        //ドラッグ先カード
+        CardScript targetCard = default;
+        //Rayが当たった全オブジェクトに対しての処理
+        foreach (RaycastHit2D hit in Physics2D.RaycastAll(ray.origin, ray.direction, _rayDistance))
+        {
+            //当たったオブジェクトが存在しないなら終了
+            if (!hit.collider)
+            {
+                break;
+            }
+            //当たったオブジェクトがドラッグ中のカードと同一なら次へ
+            GameObject hitObj = hit.collider.gameObject;
+            if (hitObj == _draggingCard.gameObject)
+            {
+                continue;
+            }
+            // オブジェクトがカードエリアなら取得する
+            CardZoneScript hitArea = hitObj.GetComponent<CardZoneScript>();
+            if (hitArea != null)
+            {
+                targetZone = hitArea;
+                continue;
+            }
+            // オブジェクトがカードなら取得して次へ
+            CardScript hitCard = hitObj.GetComponent<CardScript>();
+            if (hitCard != null)
+            {
+                targetCard = hitCard;
+                continue;
+            }
+        }
+
+        ////プレイボードにあるカードどうしが重なったら
+        //if (targetCard != null && (targetCard.GetNowZone >= CardZoneScript.ZoneType.PlayBoard0 && targetCard.GetNowZone <= CardZoneScript.ZoneType.PlayBoard4))
+        //{
+        //    //合成処理(未実装)
+        //}
+        //カードと重ならずカードエリアと重なった場合
+        if (targetZone != null)
+        {
+            //設置処理
+            _draggingCard.PutToZone(targetZone.GetZoneType, targetZone.GetComponent<RectTransform>().position);
+            CheckHandCardsNum();
+            //手札以外から手札への移動の場合、カードをリスト内で一番後ろにする
+            if (_draggingCard.GetNowZone == CardZoneScript.ZoneType.Hand)
+            {
+                _cardInstances.Remove(_draggingCard);
+                _cardInstances.Add(_draggingCard);
+            }
+        }
+        //いずれとも重ならなかった場合
+        else
+        {
+            //元の位置に戻す
+            _draggingCard.BackToBasePos();
+        }
+
         //初期化処理
         _draggingCard = null;
     }
