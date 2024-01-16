@@ -29,5 +29,4 @@ public class CardDataSO : ScriptableObject
     public string GetCardName { get => _cardName; }
     public List<CardEffectDefineScript> GetEffectList { get => _effectList; }
     public int GetForce { get => _force; }
-
 }

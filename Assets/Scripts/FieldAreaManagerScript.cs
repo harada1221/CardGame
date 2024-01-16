@@ -30,6 +30,8 @@ public class FieldAreaManagerScript : MonoBehaviour
     private Transform _cardsParentTransForm = default;
     [SerializeField, Header("デッキオブジェクトTransform")]
     private Transform _deckTransForm = default;
+    [SerializeField,Header("カードデータ")]
+    private CardDataSO _testCardData = default;
 
     //ドラッグ操作中カード
     private CardScript _draggingCard = default;
@@ -106,15 +108,16 @@ public class FieldAreaManagerScript : MonoBehaviour
     /// <param name="handID">対象手札番号</param>
     private void DrawCard(int handID)
     {
-        // オブジェクト作成
+        //オブジェクト作成
         GameObject obj = Instantiate(_cardPrefab, _cardsParentTransForm);
-        // カード処理クラスを取得・リストに格納
+        //カード処理クラスを取得・リストに格納
         CardScript objCard = obj.GetComponent<CardScript>();
         _cardInstances.Add(objCard);
 
-        // カード初期設定
+        //カード初期設定
         objCard.Init(this, _deckTransForm.position);
         objCard.PutToZone(CardZoneScript.ZoneType.Hand, _dammyHand.GetHandPos(handID));
+        objCard.SetInitialCardData(_testCardData, CardScript.CharaID_Player);
     }
 
     /// <summary>

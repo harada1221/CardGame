@@ -84,6 +84,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6309288397842575354}
+  - component: {fileID: 2675625072833617517}
   m_Layer: 5
   m_Name: Effects
   m_TagString: Untagged
@@ -110,6 +111,32 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -20}
   m_SizeDelta: {x: 70, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2675625072833617517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 874272522356505179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 4
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &3292721778292823075
 GameObject:
   m_ObjectHideFlags: 0
@@ -137,15 +164,15 @@ RectTransform:
   m_GameObject: {fileID: 3292721778292823075}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.6600249, y: 0.83665127, z: 0.74369}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1854042617192809566}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 28, y: 20}
+  m_AnchoredPosition: {x: 0.1, y: 0.4}
+  m_SizeDelta: {x: 52.2895, y: 29.9649}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &379592487586528988
 CanvasRenderer:
@@ -168,7 +195,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -177,10 +204,10 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: d1105510145b69f4388f555a7ae31e21, type: 3}
-    m_FontSize: 14
+    m_FontSize: 20
     m_FontStyle: 0
     m_BestFit: 1
-    m_MinSize: 10
+    m_MinSize: 2
     m_MaxSize: 40
     m_Alignment: 4
     m_AlignByGeometry: 1
@@ -276,6 +303,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 443977746928703788}
+  - component: {fileID: 6244379798899882283}
   m_Layer: 5
   m_Name: Icons
   m_TagString: Untagged
@@ -302,6 +330,32 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 32}
   m_SizeDelta: {x: 100, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &6244379798899882283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6401928212379137424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 4
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 0
+  m_ChildForceExpandHeight: 0
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &6864779339827661599
 GameObject:
   m_ObjectHideFlags: 0
@@ -314,6 +368,7 @@ GameObject:
   - component: {fileID: 4311007718725710971}
   - component: {fileID: 7240906132077125981}
   - component: {fileID: 6052354413153812306}
+  - component: {fileID: 3581548676327027440}
   m_Layer: 5
   m_Name: CardObj
   m_TagString: Untagged
@@ -367,7 +422,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.33268976, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -397,6 +452,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rectTransform: {fileID: 7674011902869979600}
+  _cardUI: {fileID: 3581548676327027440}
+--- !u!114 &3581548676327027440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6864779339827661599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4c9787afac000143b4f488a2a20a3c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cardEffectTextPrefab: {fileID: 8280870103274029070, guid: 3f86448d4fe3f264abb30c7b17037865, type: 3}
+  _cardBackImage: {fileID: 7240906132077125981}
+  _cardNameText: {fileID: 2074272453144501564}
+  _cardEffectTextParent: {fileID: 6309288397842575354}
+  _cardForceText: {fileID: 1002545968610519914}
+  _cardForceBackImage: {fileID: 2531959336325818327}
+  _quantityText: {fileID: 6010004024915511049}
+  _quantityBackImage: {fileID: 6079928614563702251}
+  _hilightImageObject: {fileID: 812914287286383639}
+  _cardBackSpritePlayer: {fileID: 21300000, guid: a50fe1fbf5d65c94c96d3d528105f079, type: 3}
+  _cardBackSpriteEnemy: {fileID: 21300000, guid: 8218c36f0a5200042b24b2aa687de7f7, type: 3}
 --- !u!1 &7922077783182279457
 GameObject:
   m_ObjectHideFlags: 0
@@ -614,7 +693,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

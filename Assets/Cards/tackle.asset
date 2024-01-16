@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5a572c17865b81408e806370f6b5c48, type: 3}
   m_Name: tackle
   m_EditorClassIdentifier: 
-  _serialNum: 18
+  _serialNum: 6
   _cardName: "\u4F53\u5F53\u305F\u308A"
   _effectList:
   - _cardEffect: 0
