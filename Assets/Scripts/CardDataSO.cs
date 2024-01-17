@@ -20,7 +20,7 @@ public class CardDataSO : ScriptableObject
     private string _cardName = default;
 
     [SerializeField, Header("Œø‰ÊƒŠƒXƒg")]
-    private List<CardEffectDefineScript> _effectList;
+    private List<CardEffectDefineScript> _effectList = default;
 
     [SerializeField, Header("‹­“x")]
     private int _force = default;

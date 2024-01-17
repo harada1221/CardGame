@@ -16,9 +16,13 @@ public class PlayerDeckDataScript : MonoBehaviour
     [SerializeField, Header("プレイヤー側デッキのリスト")]
     private List<CardDataSO> _playerInitialDeck = default;
     [SerializeField,Header("プレイヤー側全カードデータと通し番号")]
-    private Dictionary<int, CardDataSO> _cardDatasBySerialNum;
-    //プレイヤーデッキ
+    private Dictionary<int, CardDataSO> _cardDatasBySerialNum = default;
+    //プレイヤーデッキカードのシリアル値
     private List<int> _deckCardList = default;
+
+    public List<int> GetDeckCardList { get => _deckCardList; }
+    public Dictionary<int, CardDataSO> GetCardDatasBySerialNum { get => _cardDatasBySerialNum; }
+
     // 初期化処理
     public void Init()
     {

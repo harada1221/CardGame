@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 385065a0d223631428cbf8dc9ef5b76a, type: 3}
+  m_Name: EnemyStatusSO
+  m_EditorClassIdentifier: 
+  _enemyName: "\u3080\u3048\u307B\u3075\u305B"
+  _charaSprite: {fileID: 21300000, guid: 8218c36f0a5200042b24b2aa687de7f7, type: 3}
+  _maxHP: 8
+  _useCardDatas:
+  - placeCardData0: {fileID: 0}
+    placeCardData1: {fileID: 0}
+    placeCardData2: {fileID: 11400000, guid: ee7a0e3b8b85ee347a874d9a6277e9fc, type: 2}
+    placeCardData3: {fileID: 0}
+    placeCardData4: {fileID: 0}
+  - placeCardData0: {fileID: 0}
+    placeCardData1: {fileID: 11400000, guid: ee7a0e3b8b85ee347a874d9a6277e9fc, type: 2}
+    placeCardData2: {fileID: 0}
+    placeCardData3: {fileID: 11400000, guid: f324a9b4e697b804e8ce2c1f409824cb, type: 2}
+    placeCardData4: {fileID: 0}
+  _bonusOptions: 4
+  _bonusPoint: 2
+  _bonusCardList:
+  - {fileID: 11400000, guid: f324a9b4e697b804e8ce2c1f409824cb, type: 2}
+  - {fileID: 11400000, guid: 8b36d059da5589f459d55af7a6419a5b, type: 2}

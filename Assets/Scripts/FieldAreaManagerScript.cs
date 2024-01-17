@@ -18,10 +18,12 @@ public class FieldAreaManagerScript : MonoBehaviour
     private RectTransform _canvasRectTransform = default;
     [SerializeField, Header("メインカメラ")]
     private Camera _mainCamera = default;
-    //戦闘画面マネージャー
-    private BattleManagerScript _battleManager = default;
-    //ダミー手札制御クラス
-    private DammyHandScript _dammyHand = default;
+    [SerializeField, Header("プレイヤーデッキのスクリプト")]
+    private PlayerDeckDataScript _playerDeckDataScript = default;
+    [SerializeField, Header("デッキアイコンのオブジェクト")]
+    private GameObject _deckIconObject = default;
+    [SerializeField, Header("デッキの残り枚数表示テキスト")]
+    private Text _deckRemainingNum = default;
 
     //カード関連
     [SerializeField, Header("カードのプレハブ")]
@@ -30,9 +32,15 @@ public class FieldAreaManagerScript : MonoBehaviour
     private Transform _cardsParentTransForm = default;
     [SerializeField, Header("デッキオブジェクトTransform")]
     private Transform _deckTransForm = default;
-    [SerializeField,Header("カードデータ")]
-    private CardDataSO _testCardData = default;
 
+    //戦闘画面マネージャー
+    private BattleManagerScript _battleManager = default;
+    //ダミー手札制御クラス
+    private DammyHandScript _dammyHand = default;
+    //プレイヤーの現在のデッキ
+    private List<CardDataSO> _playerDeckData = default;
+    //プレイヤーデッキのバックアップ
+    private List<CardDataSO> _playerDeckDataBackUp = default;
     //ドラッグ操作中カード
     private CardScript _draggingCard = default;
     //生成したプレイヤー操作カードリスト
@@ -45,16 +53,21 @@ public class FieldAreaManagerScript : MonoBehaviour
     //rayの長さ
     const float _rayDistance = 10.0f;
     // ドロー間の時間間隔
-    const float DrawIntervalTime = 0.1f;
+    const float _drawIntervalTime = 0.1f;
+    //色を変えるデッキ枚数
+    const int _sufficientLine = 10;
     #endregion
 
     #region 初期化処理
+    /// <summary>
+    /// 初期化処理変わらないもの
+    /// </summary>
     private void Start()
     {
         _dammyHand = GameObject.FindObjectOfType<DammyHandScript>();
     }
     /// <summary>
-    /// 初期化処理
+    /// 初期化処理変わるもの、順番がおかしくならないようにする
     /// </summary>
     /// <param name="battleManager">使うBattleManagerScript</param>
     public void InBattleManager(BattleManagerScript battleManager)
@@ -63,13 +76,16 @@ public class FieldAreaManagerScript : MonoBehaviour
         _battleManager = battleManager;
         //変数初期化
         _cardInstances = new List<CardScript>();
+        // UI初期化
+        _deckRemainingNum.color = Color.clear;
 
         // デバッグ用ドロー処理(遅延実行)
         DOVirtual.DelayedCall(
             1.0f, // 1.0秒遅延
             () =>
             {
-                DrawCardsUntilNum(5);
+                OnBattleStarting();
+                OnTurnStarting();
             }
         );
     }
@@ -101,23 +117,72 @@ public class FieldAreaManagerScript : MonoBehaviour
     }
     #endregion
 
+    #region 進行管理
+    /// <summary>
+    /// バトル開始処理
+    /// </summary>
+    public void OnBattleStarting()
+    {
+        //デッキデータ生成
+        _playerDeckData = new List<CardDataSO>();
+        _playerDeckDataBackUp = new List<CardDataSO>();
+        //デッキデータ取得
+        foreach (int cardData in _playerDeckDataScript.GetDeckCardList)
+        {
+            _playerDeckData.Add(_playerDeckDataScript.GetCardDatasBySerialNum[cardData]);
+            _playerDeckDataBackUp.Add(_playerDeckDataScript.GetCardDatasBySerialNum[cardData]);
+        }
+        //デッキ残り枚数表示
+        PrintPlayerDeckNum();
+    }
+    /// <summary>
+	/// ターン開始時処理
+	/// </summary>
+	public void OnTurnStarting()
+    {
+        //カードのドロー枚数決定
+        int nextHandCardsNum = 5;// 手札枚数
+        //ドロー処理
+        DrawCardsUntilNum(nextHandCardsNum);
+        ishandSort = true;
+    }
+
+
+    #endregion
+
     #region プレイヤー側手札の処理
     /// <summary>
-    /// デッキからカードを１枚引き手札に加える
+    /// デッキからカードを１枚引く
     /// </summary>
     /// <param name="handID">対象手札番号</param>
     private void DrawCard(int handID)
     {
+        //デッキ残り枚数
+        int deckCardNum = _playerDeckData.Count;
+        // デッキの残りが無い場合はドローせず終了
+        if (deckCardNum <= 0)
+        {
+            return;
+        }
+
         //オブジェクト作成
         GameObject obj = Instantiate(_cardPrefab, _cardsParentTransForm);
         //カード処理クラスを取得・リストに格納
         CardScript objCard = obj.GetComponent<CardScript>();
         _cardInstances.Add(objCard);
 
+        //デッキ内から引かれるカードをランダムに決定
+        CardDataSO targetCard = _playerDeckData[Random.Range(0, deckCardNum)];
+        //デッキリストから該当カードを削除
+        _playerDeckData.Remove(targetCard);
+
         //カード初期設定
         objCard.Init(this, _deckTransForm.position);
         objCard.PutToZone(CardZoneScript.ZoneType.Hand, _dammyHand.GetHandPos(handID));
-        objCard.SetInitialCardData(_testCardData, CardScript.CharaID_Player);
+        objCard.SetInitialCardData(targetCard, CardScript.CharaID_Player);
+
+        //デッキ残り枚数表示
+        PrintPlayerDeckNum();
     }
 
     /// <summary>
@@ -130,6 +195,7 @@ public class FieldAreaManagerScript : MonoBehaviour
         int nowHandNum = 0;
         foreach (CardScript card in _cardInstances)
         {
+            //手札にあれば加算
             if (card.GetNowZone == CardZoneScript.ZoneType.Hand)
             {
                 nowHandNum++;
@@ -141,6 +207,11 @@ public class FieldAreaManagerScript : MonoBehaviour
         if (drawNum <= 0)
         {
             return;
+        }
+        //デッキ枚数がドロー枚数より少ない時デッキ枚数に合わせる
+        if (_playerDeckData.Count < drawNum)
+        {
+            drawNum = _playerDeckData.Count;
         }
 
         //手札UIに枚数を指定
@@ -159,7 +230,7 @@ public class FieldAreaManagerScript : MonoBehaviour
                 nowHandNum++;
             });
             // 時間間隔をSequenceに追加
-            drawSequence.AppendInterval(DrawIntervalTime);
+            drawSequence.AppendInterval(_drawIntervalTime);
         }
         drawSequence.OnComplete(() => isDraw = false);
     }
@@ -175,6 +246,7 @@ public class FieldAreaManagerScript : MonoBehaviour
         //各カードをダミー手札に合わせて移動
         foreach (CardScript card in _cardInstances)
         {
+            //手札にあれば座標変更してindex増加
             if (card.GetNowZone == CardZoneScript.ZoneType.Hand)
             {
                 card.PutToZone(CardZoneScript.ZoneType.Hand, _dammyHand.GetHandPos(index));
@@ -187,7 +259,7 @@ public class FieldAreaManagerScript : MonoBehaviour
 	/// </summary>
 	private void CheckHandCardsNum()
     {
-        // 現在の手札枚数を取得
+        //現在の手札枚数を取得
         int nowHandNum = 0;
         foreach (CardScript item in _cardInstances)
         {
@@ -197,10 +269,43 @@ public class FieldAreaManagerScript : MonoBehaviour
                 nowHandNum++;
             }
         }
-        // ダミー手札に枚数を指定
+        //ダミー手札に枚数を指定
         _dammyHand.SetHandNum(nowHandNum);
-        // 手札枚数に合わせて手札を整列
+        //手札枚数に合わせて手札を整列
         ishandSort = true;
+    }
+    /// <summary>
+	/// プレイヤー側デッキ残り枚数の表示を更新する
+	/// </summary>
+	private void PrintPlayerDeckNum()
+    {
+        //デッキ残り枚数
+        int deckCardNum = _playerDeckData.Count;
+        //枚数をText表示
+        _deckRemainingNum.text = _playerDeckData.Count.ToString();
+
+        //残り枚数に応じて表示色を変更
+        if (deckCardNum >= _sufficientLine)
+        {
+            _deckRemainingNum.color = Color.white;
+        }
+        else if (deckCardNum > 0)
+        {
+            _deckRemainingNum.color = Color.yellow;
+        }
+        else
+        {
+            _deckRemainingNum.color = Color.clear;
+        }
+        //残り枚数が１枚でもあればデッキのカードアイコンを表示する
+        if (deckCardNum > 0)
+        {
+            _deckIconObject.SetActive(true);
+        }
+        else
+        {
+            _deckIconObject.SetActive(false);
+        }
     }
     #endregion
 

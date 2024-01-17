@@ -13,8 +13,10 @@ public class DataScript : MonoBehaviour
 {
     [SerializeField ,Header("シングルトン維持用")]
     private static DataScript _date = default;
+	[SerializeField, Header("デッキ管理クラス")]
+	private PlayerDeckDataScript _playerDeckData = default;
 	/// <summary>
-	/// 
+	/// 初期設定
 	/// </summary>
 	private void Awake()
 	{
@@ -35,7 +37,11 @@ public class DataScript : MonoBehaviour
 	/// </summary>
 	private void InitialProcess()
     {
-		// 乱数シード値初期化
+		//乱数シード値初期化
 		Random.InitState(System.DateTime.Now.Millisecond);
+		//プレイヤーデッキデータの初期処理
+		_playerDeckData.Init();
+		//プレイヤー所持カードデータ初期化
+		_playerDeckData.DataInitialize();
 	}
 }
