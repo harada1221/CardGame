@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 385065a0d223631428cbf8dc9ef5b76a, type: 3}
   m_Name: EnemyStatusSO
   m_EditorClassIdentifier: 
-  _enemyName: "\u3080\u3048\u307B\u3075\u305B"
+  _enemyName: "\u30AB\u30CA\u30AB\u30CA"
   _charaSprite: {fileID: 21300000, guid: 8218c36f0a5200042b24b2aa687de7f7, type: 3}
   _maxHP: 8
   _useCardDatas:
