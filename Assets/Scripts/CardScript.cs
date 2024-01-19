@@ -21,6 +21,8 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public RectTransform _rectTransform = default;
     [SerializeField, Header("カードUI表示")] 
     private CardUIScript _cardUI = default;
+    [SerializeField,Header("オブジェクトのCanvasGroup")]
+    private CanvasGroup _canvasGroup = default;
 
     //ドラッグ終了後に戻ってくる座標
     private Vector2 _basePos = default;
@@ -57,6 +59,9 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     #region プロパティ
     public CardZoneScript.ZoneType GetNowZone { get => _nowZone; }
+    public int GetControllerCharaID { get => _controllerCharaID; }
+    public List<CardEffectDefineScript> GetCardEffects { get => _cardEffects; }
+    public int GetForcePoint { get => _forcePoint; }
     #endregion
 
     #region 初期処理

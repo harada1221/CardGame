@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 385065a0d223631428cbf8dc9ef5b76a, type: 3}
   m_Name: EnemyStatusSO
   m_EditorClassIdentifier: 
-  _enemyName: "\u30AB\u30CA\u30AB\u30CA"
-  _charaSprite: {fileID: 21300000, guid: 8218c36f0a5200042b24b2aa687de7f7, type: 3}
+  _enemyName: "\u30B9\u30E9\u30A4\u30E0"
+  _charaSprite: {fileID: 21300000, guid: 11705da40a6115543945e36647aa8d77, type: 3}
   _maxHP: 8
   _useCardDatas:
   - placeCardData0: {fileID: 0}
     placeCardData1: {fileID: 0}
     placeCardData2: {fileID: 11400000, guid: ee7a0e3b8b85ee347a874d9a6277e9fc, type: 2}
-    placeCardData3: {fileID: 0}
+    placeCardData3: {fileID: 11400000, guid: ee7a0e3b8b85ee347a874d9a6277e9fc, type: 2}
     placeCardData4: {fileID: 0}
   - placeCardData0: {fileID: 0}
     placeCardData1: {fileID: 11400000, guid: ee7a0e3b8b85ee347a874d9a6277e9fc, type: 2}

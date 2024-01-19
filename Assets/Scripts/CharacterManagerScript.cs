@@ -5,12 +5,17 @@ using UnityEngine.UI;
 using DG.Tweening;
 public class CharacterManagerScript : MonoBehaviour
 {
+    [SerializeField, Header("生成した敵オブジェクトの親")]
+    private Transform _enemyPictureParent = default;
+    [SerializeField, Header("敵キャラのPrehub")]
+    private GameObject _enemyPicturePrefab = default;
     [SerializeField, Header("プレイヤーステータス")]
     private StatusUIScript _playerStatusUI = default;
     [SerializeField, Header("敵ステータス")]
     private StatusUIScript _enemyStatusUI = default;
     [SerializeField, Header("初期HP")]
     private int _fastHP = 30;
+
     //戦闘のマネージャー
     private BattleManagerScript _battleManager = default;
     //敵の定義データ
@@ -19,6 +24,8 @@ public class CharacterManagerScript : MonoBehaviour
     private int[] _nowHP = default;
     //最大HPデータ
     private int[] _maxHP = default;
+    //出現中の敵オブジェクト処理クラス
+    private EnemyPictureScript _enemyPicture = default;
 
     //振動演出強度
     public const float _shakeAnimPower = 18.0f;
@@ -85,6 +92,21 @@ public class CharacterManagerScript : MonoBehaviour
             _enemyStatusUI.SetHPView(_nowHP[charaID], _maxHP[charaID]);
         }
 
+        //ダメージ演出
+        if (charaID == CardScript.CharaID_Enemy)
+        {
+            //撃破演出
+            if (IsEnemyDefeated())
+            {
+                _enemyPicture.DefeatAnimation();
+            }
+            //被ダメージ演出
+            else if (value < 0)
+            {
+                //_enemyPicture.DamageAnimation();
+            }
+        }
+
     }/// <summary>
      /// 最大HPを変更する
      /// </summary>
@@ -114,6 +136,20 @@ public class CharacterManagerScript : MonoBehaviour
             //敵のHP
             _enemyStatusUI.SetHPView(_nowHP[charaID], _maxHP[charaID]);
         }
+        //ダメージ演出
+        if (charaID == CardScript.CharaID_Enemy)
+        {
+            //撃破演出
+            if (IsEnemyDefeated())
+            {
+                _enemyPicture.DefeatAnimation();
+            }
+            //被ダメージ演出
+            else if (value < 0)
+            {
+                //_enemyPicture.DamageAnimation();
+            }
+        }
     }
     #region 敵への処理
     /// <summary>
@@ -129,6 +165,13 @@ public class CharacterManagerScript : MonoBehaviour
         _nowHP[CardScript.CharaID_Enemy] = _enemyDate.GetHP;
         _maxHP[CardScript.CharaID_Enemy] = _enemyDate.GetHP;
 
+        //敵画像オブジェクト作成
+        GameObject obj = Instantiate(_enemyPicturePrefab, _enemyPictureParent);
+        //敵画像処理クラス取得
+        _enemyPicture = obj.GetComponent<EnemyPictureScript>();
+        //敵画像処理クラス初期化
+        _enemyPicture.Init(this, _enemyDate.GetCharaSprite);
+
         //敵ステータスUI表示
         _enemyStatusUI.ShowCanvasGroup();
         _enemyStatusUI.SetCharacterName(_enemyDate.GetEnemyName);
@@ -139,7 +182,8 @@ public class CharacterManagerScript : MonoBehaviour
 	/// </summary>
 	public void DeleteEnemy()
     {
-
+        //オブジェクト削除
+        _enemyPicture.gameObject.SetActive(false);
     }
     #endregion
 

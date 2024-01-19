@@ -21,7 +21,13 @@ public class BattleManagerScript : MonoBehaviour
     //private CardDataSO _cardDate = default;
     [SerializeField, Header("出現敵データ")]
     private EnemyStatusSO _enemyStatusSO = default;
+    [SerializeField,Header("カード効果発動管理クラス")]
+    private PlayBoardManagerScript _playBoardManager = default;
 
+
+    public FieldAreaManagerScript GetFieldManager { get => _fieldAreaScript; }
+    public CharacterManagerScript GetCharacterManager { get => _characterManager; }
+    public PlayBoardManagerScript GetPlayBoardManager { get => _playBoardManager; }
     /// <summary>
     /// 初期化処理
     /// </summary>
@@ -32,6 +38,7 @@ public class BattleManagerScript : MonoBehaviour
         //コンポーネント初期化
         _fieldAreaScript.InBattleManager(this);
         _characterManager.Init(this);
+        _playBoardManager.Init(this);
         // (デバッグ用)敵を画面に出現させる
         DOVirtual.DelayedCall(
             1.0f, // 1秒遅延

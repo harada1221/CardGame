@@ -24,6 +24,8 @@ public class FieldAreaManagerScript : MonoBehaviour
     private GameObject _deckIconObject = default;
     [SerializeField, Header("デッキの残り枚数表示テキスト")]
     private Text _deckRemainingNum = default;
+    [SerializeField, Header("プレイボタン")]
+    private Button _cardPlayButton = default;
 
     //カード関連
     [SerializeField, Header("カードのプレハブ")]
@@ -51,11 +53,11 @@ public class FieldAreaManagerScript : MonoBehaviour
     private bool isDraw = false;
 
     //rayの長さ
-    const float _rayDistance = 10.0f;
+    private const float _rayDistance = 10.0f;
     // ドロー間の時間間隔
-    const float _drawIntervalTime = 0.1f;
+    private const float _drawIntervalTime = 0.1f;
     //色を変えるデッキ枚数
-    const int _sufficientLine = 10;
+    private const int _sufficientLine = 10;
     #endregion
 
     #region 初期化処理
@@ -145,11 +147,43 @@ public class FieldAreaManagerScript : MonoBehaviour
         //ドロー処理
         DrawCardsUntilNum(nextHandCardsNum);
         ishandSort = true;
+        //カード実行ボタンを有効化
+        _cardPlayButton.interactable = true;
     }
-
-
     #endregion
+    /// <summary>
+	/// カード効果発動ボタン押下時処理
+	/// </summary>
+	public void CardPlayButton()
+    {
+        //カードドラッグ中なら処理しない
+        if (_draggingCard != null)
+        {
+            Debug.Log("ないよ");
+            return;
+        }
 
+
+        //実行ボタンを一時的に無効化
+        _cardPlayButton.interactable = false;
+
+        //プレイボード上カードの配列を作成
+        CardScript[] boardCards = new CardScript[PlayBoardManagerScript.PlayBoardCardNum];
+        //プレイボード上のカードを取得して配列に格納
+        foreach (CardScript card in _cardInstances)
+        {
+            // 配列内の指定の位置に該当カードを格納する
+            if (card.GetNowZone >= CardZoneScript.ZoneType.PlayBoard0 &&
+                card.GetNowZone <= CardZoneScript.ZoneType.PlayBoard4)
+            {
+                int arrayID = (int)card.GetNowZone - (int)CardZoneScript.ZoneType.PlayBoard0;
+                boardCards[arrayID] = card;
+            }
+        }
+
+        //各カードの効果を実行
+        _battleManager.GetPlayBoardManager.BoardCardsPlay(boardCards);
+    }
     #region プレイヤー側手札の処理
     /// <summary>
     /// デッキからカードを１枚引く
