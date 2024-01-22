@@ -26,7 +26,7 @@ public class PlayerDeckDataScript : MonoBehaviour
     // 初期化処理
     public void Init()
     {
-        // プレイヤー側全カードデータと通し番号を紐づける
+        //プレイヤー側全カードデータと通し番号を紐づける
         _cardDatasBySerialNum = new Dictionary<int, CardDataSO>();
         foreach (CardDataSO item in _allPlayerCardsList)
         {

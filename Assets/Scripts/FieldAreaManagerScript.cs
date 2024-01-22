@@ -51,6 +51,8 @@ public class FieldAreaManagerScript : MonoBehaviour
     private bool ishandSort = false;
     //手札補充中フラグ
     private bool isDraw = false;
+    //カード効果実行中フラグ
+    private bool isCardPlaying = false;
 
     //rayの長さ
     private const float _rayDistance = 10.0f;
@@ -62,7 +64,7 @@ public class FieldAreaManagerScript : MonoBehaviour
 
     #region 初期化処理
     /// <summary>
-    /// 初期化処理変わらないもの
+    /// 初期化処理順番が関係ないもの
     /// </summary>
     private void Start()
     {
@@ -80,16 +82,6 @@ public class FieldAreaManagerScript : MonoBehaviour
         _cardInstances = new List<CardScript>();
         // UI初期化
         _deckRemainingNum.color = Color.clear;
-
-        // デバッグ用ドロー処理(遅延実行)
-        DOVirtual.DelayedCall(
-            1.0f, // 1.0秒遅延
-            () =>
-            {
-                OnBattleStarting();
-                OnTurnStarting();
-            }
-        );
     }
     #endregion
 
@@ -149,8 +141,66 @@ public class FieldAreaManagerScript : MonoBehaviour
         ishandSort = true;
         //カード実行ボタンを有効化
         _cardPlayButton.interactable = true;
+        //敵のカード設置
+        PlacingEnemyCards();
     }
     #endregion
+    /// <summary>
+	/// (ターン開始時)敵側のカードをプレイボードに全て設置する
+	/// </summary>
+	private void PlacingEnemyCards()
+    {
+        //敵データ取得
+        EnemyStatusSO enemyData = _battleManager.GetCharacterManager.GetEnemyDate;
+
+        //このターンに使用する敵カードセットの番号を取得
+        int enemyAttackOrderID = _battleManager.GetNowTurns % enemyData.GetUseCardDatas.Count;
+
+        //敵カード設置処理
+        EnemyStatusSO.EnemyUseCardData useCardDatasInThisTurn = enemyData.GetUseCardDatas[enemyAttackOrderID]; // このターンの使用カードリスト
+        for (int i = 0; i < PlayBoardManagerScript.PlayBoardCardNum; i++)
+        {
+            //各ゾーンに対する設置カードを取得
+            CardDataSO cardData = null;
+            switch (i)
+            {
+                case 0:
+                    cardData = useCardDatasInThisTurn.placeCardData0; break;
+                case 1:
+                    cardData = useCardDatasInThisTurn.placeCardData1; break;
+                case 2:
+                    cardData = useCardDatasInThisTurn.placeCardData2; break;
+                case 3:
+                    cardData = useCardDatasInThisTurn.placeCardData3; break;
+                case 4:
+                    cardData = useCardDatasInThisTurn.placeCardData4; break;
+            }
+            //設置カードが無いなら次へ
+            if (cardData == null)
+            {
+                continue;
+            }
+
+
+            //設置先ゾーンIDを取得
+            CardZoneScript.ZoneType areaType = CardZoneScript.ZoneType.PlayBoard0 + i;
+            // 設置先Vector2座標を取得
+            Vector2 targetPosition = _battleManager.GetPlayBoardManager.GetPlayZonePos(i);
+
+            //オブジェクト作成
+            GameObject obj = Instantiate(_cardPrefab, _cardsParentTransForm);
+            //カード処理クラスを取得・リストに格納
+            CardScript objCard = obj.GetComponent<CardScript>();
+            _cardInstances.Add(objCard);
+
+            //カード初期設定
+            objCard.Init(this, _battleManager.GetCharacterManager.GetEnemyPosition());
+            objCard.PutToZone(areaType, targetPosition);
+            //敵IDを指定
+            objCard.SetInitialCardData(cardData, CardScript.CharaID_Enemy);
+        }
+    }
+
     /// <summary>
 	/// カード効果発動ボタン押下時処理
 	/// </summary>
@@ -159,13 +209,14 @@ public class FieldAreaManagerScript : MonoBehaviour
         //カードドラッグ中なら処理しない
         if (_draggingCard != null)
         {
-            Debug.Log("ないよ");
             return;
         }
 
 
         //実行ボタンを一時的に無効化
         _cardPlayButton.interactable = false;
+        //効果実行中
+        isCardPlaying = true;
 
         //プレイボード上カードの配列を作成
         CardScript[] boardCards = new CardScript[PlayBoardManagerScript.PlayBoardCardNum];
@@ -183,6 +234,14 @@ public class FieldAreaManagerScript : MonoBehaviour
 
         //各カードの効果を実行
         _battleManager.GetPlayBoardManager.BoardCardsPlay(boardCards);
+    }
+    /// <summary>
+	/// ターン終了時に実行される処理
+	/// </summary>
+	public void OnTurnEnd()
+    {
+        //効果実行処理中フラグ
+        isCardPlaying = false;
     }
     #region プレイヤー側手札の処理
     /// <summary>
@@ -355,6 +414,11 @@ public class FieldAreaManagerScript : MonoBehaviour
         {
             return;
         }
+        // カードの効果実行中なら終了
+        if (isCardPlaying == true)
+        {
+            return;
+        }
         //操作対象カードを記憶
         _draggingCard = dragCard;
         //最前面表示にする
@@ -382,6 +446,12 @@ public class FieldAreaManagerScript : MonoBehaviour
 	/// </summary>
 	public void EndDragging()
     {
+        //カードを操作中でないなら終了
+        if (_draggingCard == null)
+        {
+            return;
+        }
+
         //オブジェクトのスクリーン座標を取得する
         Vector3 pos = RectTransformUtility.WorldToScreenPoint(_mainCamera, _draggingCard.transform.position);
         //メインカメラから上記で取得した座標に向けてRayを飛ばす
@@ -421,11 +491,11 @@ public class FieldAreaManagerScript : MonoBehaviour
             }
         }
 
-        ////プレイボードにあるカードどうしが重なったら
-        //if (targetCard != null && (targetCard.GetNowZone >= CardZoneScript.ZoneType.PlayBoard0 && targetCard.GetNowZone <= CardZoneScript.ZoneType.PlayBoard4))
-        //{
-        //    //合成処理(未実装)
-        //}
+        //プレイボードにあるカードどうしが重なったら
+        if (targetCard != null && (targetCard.GetNowZone >= CardZoneScript.ZoneType.PlayBoard0 && targetCard.GetNowZone <= CardZoneScript.ZoneType.PlayBoard4))
+        {
+            //合成処理(未実装)
+        }
         //カードと重ならずカードエリアと重なった場合
         if (targetZone != null)
         {
@@ -450,4 +520,50 @@ public class FieldAreaManagerScript : MonoBehaviour
         _draggingCard = null;
     }
     #endregion
+
+    #region カード消去系
+    /// <summary>
+    /// 指定のカードオブジェクトをフィールドから削除する
+    /// </summary>
+    /// <param name="targetCard">削除対象カード</param>
+    public void DestroyCardObject(CardScript targetCard)
+    {
+        //リストから削除
+        _cardInstances.Remove(targetCard);
+        //オブジェクト削除
+        Destroy(targetCard.gameObject);
+    }
+
+    /// <summary>
+    /// 全てのカードオブジェクトをフィールドから削除する
+    /// </summary>
+    public void DestroyAllCards()
+    {
+        //オブジェクト削除
+        foreach (CardScript item in _cardInstances)
+        {
+            Destroy(item.gameObject);
+        }
+        //リストを初期化
+        _cardInstances.Clear();
+    }
+    #endregion
+    /// <summary>
+	/// 戦闘中にデッキ内のカード枚数を追加する
+	/// </summary>
+	/// <param name="amount">追加量</param>
+	public void AddDeckCardsNum(int amount)
+    {
+        //1枚ずつ追加
+        for (int i = 0; i < amount; i++)
+        {
+            //追加するカードを戦闘開始時のデッキデータ内からランダムに決定
+            CardDataSO targetCard = _playerDeckDataBackUp[Random.Range(0, _playerDeckDataBackUp.Count)];
+            //現在のデッキデータに追加
+            _playerDeckData.Add(targetCard);
+        }
+
+        //デッキ残り枚数表示
+        PrintPlayerDeckNum();
+    }
 }

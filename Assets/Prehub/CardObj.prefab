@@ -369,6 +369,7 @@ GameObject:
   - component: {fileID: 7240906132077125981}
   - component: {fileID: 6052354413153812306}
   - component: {fileID: 3581548676327027440}
+  - component: {fileID: 2636774522944742908}
   m_Layer: 5
   m_Name: CardObj
   m_TagString: Untagged
@@ -453,6 +454,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rectTransform: {fileID: 7674011902869979600}
   _cardUI: {fileID: 3581548676327027440}
+  _canvasGroup: {fileID: 2636774522944742908}
 --- !u!114 &3581548676327027440
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -476,6 +478,18 @@ MonoBehaviour:
   _hilightImageObject: {fileID: 812914287286383639}
   _cardBackSpritePlayer: {fileID: 21300000, guid: a50fe1fbf5d65c94c96d3d528105f079, type: 3}
   _cardBackSpriteEnemy: {fileID: 21300000, guid: 8218c36f0a5200042b24b2aa687de7f7, type: 3}
+--- !u!225 &2636774522944742908
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6864779339827661599}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &7922077783182279457
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,3 +1,10 @@
+//-----------------------------------------------------------------------
+/* キャラクターを管理するクラス
+ * 
+ * 制作者　原田　智大
+ * 制作日　12月１日
+ *--------------------------------------------------------------------------- 
+*/
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,6 +34,10 @@ public class CharacterManagerScript : MonoBehaviour
     //出現中の敵オブジェクト処理クラス
     private EnemyPictureScript _enemyPicture = default;
 
+    public int[] GetNowHP { get => _nowHP; }
+    public int[] GetMaxHP { get => _maxHP; }
+    public EnemyStatusSO GetEnemyDate { get => _enemyDate; }
+
     //振動演出強度
     public const float _shakeAnimPower = 18.0f;
     //振動演出時間
@@ -49,6 +60,12 @@ public class CharacterManagerScript : MonoBehaviour
         _playerStatusUI.SetHPView(_nowHP[CardScript.CharaID_Player], _maxHP[CardScript.CharaID_Player]);
         // 敵ステータスを非表示
         _enemyStatusUI.HideCanvasGroup(false);
+    }
+    /// <summary>
+	/// ターン終了時に実行される処理
+	/// </summary>
+	public void OnTurnEnd()
+    {
     }
     /// <summary>
 	/// プレイヤーのHPを初期化する
@@ -219,5 +236,27 @@ public class CharacterManagerScript : MonoBehaviour
             return false;
         }
     }
+    /// <summary>
+	/// 敵画像の座標を返す
+	/// </summary>
+	public Vector2 GetEnemyPosition()
+    {
+        return _enemyPicture.transform.position;
+    }
     #endregion
+    /// <summary>
+	/// プレイヤーの最大HPを元に戻す
+	/// </summary>
+	public void RecoverMaxHP_Player()
+    {
+        //カリオペHP
+        _maxHP[CardScript.CharaID_Player] = 30;
+        //大きかったら最大値にする
+        if (_nowHP[CardScript.CharaID_Player] > _maxHP[CardScript.CharaID_Player])
+        {
+            _nowHP[CardScript.CharaID_Player] = _maxHP[CardScript.CharaID_Player];
+        }
+        //HP表示
+        _playerStatusUI.SetHPView(_nowHP[CardScript.CharaID_Player], _maxHP[CardScript.CharaID_Player]);
+    }
 }

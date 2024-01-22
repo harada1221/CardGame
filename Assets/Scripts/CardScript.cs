@@ -19,9 +19,9 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     [SerializeField, Header("オブジェクトのRectTransform")]
     public RectTransform _rectTransform = default;
-    [SerializeField, Header("カードUI表示")] 
+    [SerializeField, Header("カードUI表示")]
     private CardUIScript _cardUI = default;
-    [SerializeField,Header("オブジェクトのCanvasGroup")]
+    [SerializeField, Header("オブジェクトのCanvasGroup")]
     private CanvasGroup _canvasGroup = default;
 
     //ドラッグ終了後に戻ってくる座標
@@ -55,6 +55,14 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private const int MaxIcons = 6;
     //カード効果の最大数
     private const int MaxEffects = 6;
+    //CanvasGroupの変更先Alpha値
+    private const float TargetAlpha = 0.5f;
+    //演出時間
+    private const float AnimTime = 0.3f;
+    //移動先X相対座標
+    private const float TargetPositionX_Relative = -300.0f;
+    //演出時間
+    private const float OutAnimTime = 1.0f; 
     #endregion
 
     #region プロパティ
@@ -141,6 +149,24 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         //カードゾーンの種類を保存
         _nowZone = zoneType;
     }
+
+    /// <summary>
+	/// カードを少しずつ薄くするTweenを実行する
+	/// </summary>
+	/// <returns>実行Tween</returns>
+	public Tween HideFadeTween()
+    {
+        return _canvasGroup.DOFade(TargetAlpha, AnimTime);
+    }
+    /// <summary>
+	/// カードを画面外に移動させるTweenを実行する
+	/// </summary>
+	/// <returns>実行Tween</returns>
+	public void HideMoveTween()
+    {
+        _rectTransform.DOAnchorPosX(TargetPositionX_Relative, OutAnimTime)
+            .SetRelative();
+    }
     #endregion
 
     #region クリック処理
@@ -165,11 +191,11 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     #endregion
 
     #region パラメータ変更
-/// <summary>
-/// カード効果を新規追加する
-/// </summary>
-/// <param name="newEffect">効果の種類・数値データ</param>
-private void AddCardEffect(CardEffectDefineScript newEffect)
+    /// <summary>
+    /// カード効果を新規追加する
+    /// </summary>
+    /// <param name="newEffect">効果の種類・数値データ</param>
+    private void AddCardEffect(CardEffectDefineScript newEffect)
     {
         //カード効果数上限なら終了
         if (_cardEffects.Count >= MaxEffects)
