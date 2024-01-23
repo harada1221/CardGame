@@ -18,10 +18,8 @@ MonoBehaviour:
   _appearEnemyTables:
   - _appearEnemys:
     - {fileID: 11400000, guid: 81d44e59023f37c4babdb3069c6f685a, type: 2}
-    - {fileID: 11400000, guid: 81d44e59023f37c4babdb3069c6f685a, type: 2}
   - _appearEnemys:
     - {fileID: 11400000, guid: 81d44e59023f37c4babdb3069c6f685a, type: 2}
     - {fileID: 11400000, guid: 81d44e59023f37c4babdb3069c6f685a, type: 2}
   - _appearEnemys:
-    - {fileID: 11400000, guid: 81d44e59023f37c4babdb3069c6f685a, type: 2}
     - {fileID: 11400000, guid: 81d44e59023f37c4babdb3069c6f685a, type: 2}

@@ -28,10 +28,14 @@ public class BattleManagerScript : MonoBehaviour
     private Image _stageIconImage = default;
     [SerializeField, Header("ステージ背景")]
     private Image _stageBackGroundImage = default;
-    [SerializeField, Header("")]
+    [SerializeField, Header("ステージ進行度")]
     private Image _progressGageImage = default;
     [SerializeField, Header("攻略中ステージ")]
     private StageSO _stageSO = default;
+    [SerializeField,Header("ボス表示")]
+    private BossIncomingScript _bossIncoming = default;
+    [SerializeField]
+    private StageClearScript _stageClear = default;
 
     //現在の経過ターン
     private int _nowTurns = default;
@@ -58,9 +62,10 @@ public class BattleManagerScript : MonoBehaviour
         //FieldAreaManagerScriptを取得する
         _fieldAreaScript = GameObject.FindAnyObjectByType<FieldAreaManagerScript>();
         //コンポーネント初期化
-        _fieldAreaScript.InBattleManager(this);
+        _fieldAreaScript.Init(this);
         _characterManager.Init(this);
         _playBoardManager.Init(this);
+        _bossIncoming.Init();
         //ステージ情報表示
         ApplyStageUIs();
         // (デバッグ用)敵を画面に出現させる
@@ -122,6 +127,11 @@ public class BattleManagerScript : MonoBehaviour
         List<EnemyStatusSO> appearEnemyTable = _stageSO.GetAppearEnemyTables[_nowProgress]._appearEnemys;
         int rand = Random.Range(0, appearEnemyTable.Count);
         _characterManager.SpawnEnemy(appearEnemyTable[rand]);
+        //出現する敵が一種類しか居ないならボス用演出
+        if (appearEnemyTable.Count == 1)
+        {
+            _bossIncoming.StartAnimation();
+        }
 
         //戦闘開始処理(遅延実行)
         DOVirtual.DelayedCall(
@@ -165,7 +175,7 @@ public class BattleManagerScript : MonoBehaviour
         if (isPlayerWin || isPlayerLose)
         {
             //フィールドのカードを消去
-            //_fieldAreaScript.DestroyAllCards();
+            _fieldAreaScript.DestroyAllCards();
 
             //勝利キャラクター別処理(遅延実行)
             DOVirtual.DelayedCall(

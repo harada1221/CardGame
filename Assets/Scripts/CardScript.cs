@@ -55,6 +55,8 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private const int MaxIcons = 6;
     //カード効果の最大数
     private const int MaxEffects = 6;
+    //カード強度の上限値(これを超えると破壊)
+    private const int MaxForcePoint = 9;
     //CanvasGroupの変更先Alpha値
     private const float TargetAlpha = 0.5f;
     //演出時間
@@ -62,7 +64,7 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     //移動先X相対座標
     private const float TargetPositionX_Relative = -300.0f;
     //演出時間
-    private const float OutAnimTime = 1.0f; 
+    private const float OutAnimTime = 1.0f;
     #endregion
 
     #region プロパティ
@@ -191,6 +193,86 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     #endregion
 
     #region パラメータ変更
+
+    /// <summary>
+	/// 合成によってカード効果を追加する
+	/// </summary>
+	/// <param name="newEffect">効果の種類・数値データ</param>
+	public void CompoCardEffect(CardEffectDefineScript newEffect)
+    {
+        //効果の合成可否を取得
+        CardEffectDefineScript.EffectCompoMode compoMode = CardEffectDefineScript.Dic_EffectCompoMode[newEffect.GetEffect];
+        //このカードが敵側のカードかを取得
+        bool isEnemyCard = false;
+        if (_controllerCharaID == CharaID_Enemy)
+        {
+            isEnemyCard = true;
+        }
+
+        //合成不可なら終了
+        switch (compoMode)
+        {
+            case CardEffectDefineScript.EffectCompoMode.Impossible:
+                //合成不可能
+                return;
+
+            case CardEffectDefineScript.EffectCompoMode.OnlyOwn:
+                //自分とカードとのみ合成可能
+                if (isEnemyCard)
+                {
+                    return;
+                }
+                else
+                {
+                    break;
+                }
+            case CardEffectDefineScript.EffectCompoMode.OnlyOwn_New:
+                // 自分とカードとのみ合成可能(新規のみ)
+                if (isEnemyCard)
+                {
+                    return;
+                }
+                else
+                {
+                    break;
+                }
+
+        }
+
+        //追加される効果と同じ種類の効果が既に存在するかを調べる
+        //現在の効果の種類数
+        int length = _cardEffects.Count;
+        //同じ効果データの配列内番号
+        int index;
+        for (index = 0; index < length; index++)
+        {
+            //存在した場合：番号を保存してループ終了
+            if (_cardEffects[index].GetEffect == newEffect.GetEffect)
+            {
+                break;
+            }
+
+        }
+
+        //効果の合成・追加処理
+        if (index < length)
+        {
+            //同じ種類の効果がある：合成処理
+            //新規追加限定の効果なら合成しない
+            if (compoMode == CardEffectDefineScript.EffectCompoMode.OnlyNew ||
+                compoMode == CardEffectDefineScript.EffectCompoMode.OnlyOwn_New)
+            {
+                return;
+            }
+            //効果値増減
+            EnhanceCardEffect(index, newEffect.GetValue);
+        }
+        else
+        {
+            //同じ種類の効果がない
+            AddCardEffect(newEffect);
+        }
+    }
     /// <summary>
     /// カード効果を新規追加する
     /// </summary>
@@ -213,14 +295,61 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         _cardUI.AddCardEffectText(effectData);
     }
     /// <summary>
-	/// カードの強度をセットする
+	/// カードの効果値を増減する
 	/// </summary>
-	public void SetForcePoint(int forcevalue)
+	/// <param name="index">対象効果データの配列内番号</param>
+	/// <param name="value">変化量</param>
+	public void EnhanceCardEffect(int index, int value)
+    {
+        //効果値を変更
+        CardEffectDefineScript effectData = _cardEffects[index];
+        effectData.GetValue += value;
+        //UI表示
+        _cardUI.ApplyCardEffectText(_cardEffects[index]);
+    }
+    /// <summary>
+    /// カードの強度をセットする
+    /// </summary>
+    /// <param name="value">強度の変化量</param>
+    /// <returns>破壊可能か</returns>
+	public bool SetForcePoint(int value)
     {
         //パラメータをセット
-        _forcePoint = forcevalue;
+        _forcePoint = value;
         //UI表示
-        _cardUI.SetForcePointText(forcevalue);
+        _cardUI.SetForcePointText(_forcePoint);
+
+        //破壊可能か
+        if (value > MaxForcePoint)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+    #endregion
+
+    #region その他Get・Set系
+    /// <summary>
+    /// 効果リストの中に該当する効果があるか
+    /// </summary>
+    /// <param name="effectType">検索する効果</param>
+    /// <returns>存在するか</returns>
+    public bool CheckContainEffect(CardEffectDefineScript.CardEffect effectType)
+    {
+        //該当する効果があればtrueを返す
+        foreach (CardEffectDefineScript effect in _cardEffects)
+        {
+            if (effect.GetEffect == effectType)
+            {
+                return true;
+            }
+        }
+        //ない場合はfalseを返す
+        return false;
     }
     #endregion
 }

@@ -25,6 +25,8 @@ public class StatusUIScript : MonoBehaviour
     private CanvasGroup _enemyCanvasGroup = default;
     [SerializeField, Header("キャラクター名Text")]
     private Text _enemyCharaNameText = default;
+    [SerializeField, Header("状態異常アイコンリスト")]
+    private List<StatusEffectIconScript> _statusEffectIcons = default;
     //フェード演出Tween
     private Tween _fadeTween = default;
     //フェード演出時間
@@ -58,6 +60,21 @@ public class StatusUIScript : MonoBehaviour
         }
         // Text表示
         _hpText.text = nowHP + " / " + maxHP;
+    }
+    /// <summary>
+	/// 状態異常の数値を表示する
+	/// </summary>
+	public void SetStatusEffectUI(StatusEffectIconScript.StatusEffectType effectType, int value)
+    {
+        //対象アイコン処理クラスを検索
+        for (int i = 0; i < (int)StatusEffectIconScript.StatusEffectType.MAX; i++)
+        {
+            if (_statusEffectIcons[i].GetStatusEffect == effectType)
+            {
+                //表示内容変更
+                _statusEffectIcons[i].SetValue(value);
+            }
+        }
     }
 
     #region 敵ステータス表示専用処理

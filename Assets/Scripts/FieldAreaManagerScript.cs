@@ -69,12 +69,15 @@ public class FieldAreaManagerScript : MonoBehaviour
     private void Start()
     {
         _dammyHand = GameObject.FindObjectOfType<DammyHandScript>();
+          //デッキデータ生成
+        _playerDeckData = new List<CardDataSO>();
+        _playerDeckDataBackUp = new List<CardDataSO>();
     }
     /// <summary>
     /// 初期化処理変わるもの、順番がおかしくならないようにする
     /// </summary>
     /// <param name="battleManager">使うBattleManagerScript</param>
-    public void InBattleManager(BattleManagerScript battleManager)
+    public void Init(BattleManagerScript battleManager)
     {
         //送られてきたBattleManagerScriptを格納する
         _battleManager = battleManager;
@@ -126,6 +129,7 @@ public class FieldAreaManagerScript : MonoBehaviour
             _playerDeckData.Add(_playerDeckDataScript.GetCardDatasBySerialNum[cardData]);
             _playerDeckDataBackUp.Add(_playerDeckDataScript.GetCardDatasBySerialNum[cardData]);
         }
+        Debug.Log(_playerDeckData.Count);
         //デッキ残り枚数表示
         PrintPlayerDeckNum();
     }
@@ -494,10 +498,12 @@ public class FieldAreaManagerScript : MonoBehaviour
         //プレイボードにあるカードどうしが重なったら
         if (targetCard != null && (targetCard.GetNowZone >= CardZoneScript.ZoneType.PlayBoard0 && targetCard.GetNowZone <= CardZoneScript.ZoneType.PlayBoard4))
         {
-            //合成処理(未実装)
+            //合成処理
+            CompositeCard(targetCard, _draggingCard);
+            CheckHandCardsNum();
         }
         //カードと重ならずカードエリアと重なった場合
-        if (targetZone != null)
+        else if (targetZone != null)
         {
             //設置処理
             _draggingCard.PutToZone(targetZone.GetZoneType, targetZone.GetComponent<RectTransform>().position);
@@ -518,6 +524,44 @@ public class FieldAreaManagerScript : MonoBehaviour
 
         //初期化処理
         _draggingCard = null;
+    }
+    /// <summary>
+	/// 2枚のカードを合成して1枚のカードにする
+	/// </summary>
+	/// <param name="baseCard">元となるカード)</param>
+	/// <param name="consumeCard">合成の素材とするカード</param>
+	private void CompositeCard(CardScript baseCard, CardScript consumeCard)
+    {
+        //カードがなかったら終わる
+        if (baseCard == null || consumeCard == null)
+        {
+            return;
+        }
+        //合成不可か
+        if (baseCard.CheckContainEffect(CardEffectDefineScript.CardEffect.PartsOnly) ||//カードに素材限定効果がある
+            consumeCard.CheckContainEffect(CardEffectDefineScript.CardEffect.BaseOnly) ||//カードに本体限定効果がある
+            baseCard.CheckContainEffect(CardEffectDefineScript.CardEffect.NoCompo) ||//カードに合成無効効果がある
+            consumeCard.CheckContainEffect(CardEffectDefineScript.CardEffect.NoCompo))//カードに合成無効効果がある
+        {
+            //ドラッグ中カードを元の位置に戻して合成せず終了
+            _draggingCard.BackToBasePos();
+            return;
+        }
+        //強度の加算越えたらカード削除
+        if (baseCard.SetForcePoint(baseCard.GetForcePoint + consumeCard.GetForcePoint))
+        {
+            DestroyCardObject(baseCard);
+            DestroyCardObject(consumeCard);
+            return;
+        }
+
+        //効果の合成
+        foreach (CardEffectDefineScript effect in consumeCard.GetCardEffects)
+        {
+            baseCard.CompoCardEffect(effect);
+        }
+        //消費カードを削除
+        DestroyCardObject(consumeCard);
     }
     #endregion
 

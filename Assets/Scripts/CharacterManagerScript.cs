@@ -31,12 +31,15 @@ public class CharacterManagerScript : MonoBehaviour
     private int[] _nowHP = default;
     //最大HPデータ
     private int[] _maxHP = default;
+    //各状態異常ポイント 
+    private int[,] _statusEffectsPoints = default;
     //出現中の敵オブジェクト処理クラス
     private EnemyPictureScript _enemyPicture = default;
 
     public int[] GetNowHP { get => _nowHP; }
     public int[] GetMaxHP { get => _maxHP; }
     public EnemyStatusSO GetEnemyDate { get => _enemyDate; }
+    public int[,] GetStatusEffect { get => _statusEffectsPoints; }
 
     //振動演出強度
     public const float _shakeAnimPower = 18.0f;
@@ -51,10 +54,12 @@ public class CharacterManagerScript : MonoBehaviour
         //BattleManagerScript参照取得
         _battleManager = battleManeger;
 
-        // 変数初期化
+        //変数初期化
         _nowHP = new int[CardScript.CharaNum];
         _maxHP = new int[CardScript.CharaNum];
         ResetHP_Player();
+        //状態異常ポイント初期化
+        _statusEffectsPoints = new int[CardScript.CharaNum, (int)StatusEffectIconScript.StatusEffectType.MAX];
 
         //UI初期化
         _playerStatusUI.SetHPView(_nowHP[CardScript.CharaID_Player], _maxHP[CardScript.CharaID_Player]);
@@ -66,6 +71,19 @@ public class CharacterManagerScript : MonoBehaviour
 	/// </summary>
 	public void OnTurnEnd()
     {
+        //キャラクターごとの状態異常処理
+        for (int i = 0; i < CardScript.CharaNum; i++)
+        {
+            //毒の効果発動
+            int poisonDamage = _statusEffectsPoints[i, (int)StatusEffectIconScript.StatusEffectType.Poison];
+            if (poisonDamage > 0)
+            {
+                ChangeStatus_NowHP(i, -poisonDamage);
+            }
+            //残り効果量減少
+            ChangeStatusEffect(i, StatusEffectIconScript.StatusEffectType.Poison, -1);
+            ChangeStatusEffect(i, StatusEffectIconScript.StatusEffectType.Flame, -1);
+        }
     }
     /// <summary>
 	/// プレイヤーのHPを初期化する
@@ -77,6 +95,9 @@ public class CharacterManagerScript : MonoBehaviour
         _nowHP[CardScript.CharaID_Player] = _maxHP[CardScript.CharaID_Player];
         //HP表示
         _playerStatusUI.SetHPView(_nowHP[CardScript.CharaID_Player], _maxHP[CardScript.CharaID_Player]);
+        //各種状態異常初期化
+        _statusEffectsPoints = new int[CardScript.CharaNum, (int)StatusEffectIconScript.StatusEffectType.MAX];
+        RefleshStatusEffectUI();
     }
     /// <summary>
     /// 現在HPを変更する
@@ -141,6 +162,14 @@ public class CharacterManagerScript : MonoBehaviour
         _maxHP[charaID] += value;
         //現在HPの上限・下限を反映
         _nowHP[charaID] = Mathf.Clamp(_nowHP[charaID], 0, _maxHP[charaID]);
+
+        //状態異常：炎上の効果を適用
+        if (value < 0)
+        {
+            //最大HP減少時
+            int flameDamage = _statusEffectsPoints[charaID, (int)StatusEffectIconScript.StatusEffectType.Flame];
+            _nowHP[charaID] -= flameDamage;
+        }
 
         // UI反映
         if (charaID == CardScript.CharaID_Player)
@@ -259,4 +288,34 @@ public class CharacterManagerScript : MonoBehaviour
         //HP表示
         _playerStatusUI.SetHPView(_nowHP[CardScript.CharaID_Player], _maxHP[CardScript.CharaID_Player]);
     }
+    #region 状態異常関連
+    /// <summary>
+	/// 指定キャラクターの状態異常の効果量を変更する
+	/// </summary>
+	public void ChangeStatusEffect(int charaID, StatusEffectIconScript.StatusEffectType effectType, int value)
+    {
+        //効果量変更
+        _statusEffectsPoints[charaID, (int)effectType] += value;
+        if (_statusEffectsPoints[charaID, (int)effectType] < 0)
+        {
+            _statusEffectsPoints[charaID, (int)effectType] = 0;
+        }
+
+        //UI反映
+        RefleshStatusEffectUI();
+    }
+    /// <summary>
+	/// 全ての状態異常表示UIの表示を更新する
+	/// </summary>
+	public void RefleshStatusEffectUI()
+    {
+        //プレイヤー側状態異常表示
+        _playerStatusUI.SetStatusEffectUI(StatusEffectIconScript.StatusEffectType.Poison, _statusEffectsPoints[CardScript.CharaID_Player, (int)StatusEffectIconScript.StatusEffectType.Poison]);
+        _playerStatusUI.SetStatusEffectUI(StatusEffectIconScript.StatusEffectType.Flame, _statusEffectsPoints[CardScript.CharaID_Player, (int)StatusEffectIconScript.StatusEffectType.Flame]);
+        //敵側状態異常表示
+        _enemyStatusUI.SetStatusEffectUI(StatusEffectIconScript.StatusEffectType.Poison, _statusEffectsPoints[CardScript.CharaID_Enemy, (int)StatusEffectIconScript.StatusEffectType.Poison]);
+        _enemyStatusUI.SetStatusEffectUI(StatusEffectIconScript.StatusEffectType.Flame, _statusEffectsPoints[CardScript.CharaID_Enemy, (int)StatusEffectIconScript.StatusEffectType.Flame]);
+    }
+
+    #endregion
 }
