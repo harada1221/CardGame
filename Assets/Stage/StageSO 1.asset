@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 533d33ad49cc54a4ca3d1400207238d7, type: 3}
+  m_Name: StageSO 1
+  m_EditorClassIdentifier: 
+  _stageName: "\u6D1E\u7A9F"
+  _difficulty: "\u666E\u901A"
+  _stageIcon: {fileID: 21300000, guid: 8208f45595f7c9e4485fbece459ff854, type: 3}
+  _stageBackGround: {fileID: 21300000, guid: ed0896c65eca8a44aac8d4ead6cb3115, type: 3}
+  _appearEnemyTables:
+  - _appearEnemys:
+    - {fileID: 11400000, guid: 6b03d1d7c643c5c4e97da07314cb478d, type: 2}
+    - {fileID: 11400000, guid: 9f87daf81ac8c5747b3d8bccf0c4ffdd, type: 2}
+  - _appearEnemys:
+    - {fileID: 11400000, guid: 6b03d1d7c643c5c4e97da07314cb478d, type: 2}
+    - {fileID: 11400000, guid: 9f87daf81ac8c5747b3d8bccf0c4ffdd, type: 2}
+  - _appearEnemys:
+    - {fileID: 11400000, guid: 20cbd10d9f4d76541ac9a8490dfa825f, type: 2}

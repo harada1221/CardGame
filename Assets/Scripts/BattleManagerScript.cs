@@ -34,8 +34,11 @@ public class BattleManagerScript : MonoBehaviour
     private StageSO _stageSO = default;
     [SerializeField,Header("ボス表示")]
     private BossIncomingScript _bossIncoming = default;
-    [SerializeField]
+    [SerializeField,Header("ステージクリアクラス")]
     private StageClearScript _stageClear = default;
+    [SerializeField,Header("ゲームオーバークラス")]
+    private GameOverScript _gameOver = default;
+
 
     //現在の経過ターン
     private int _nowTurns = default;
@@ -61,11 +64,13 @@ public class BattleManagerScript : MonoBehaviour
         _battleNum = _stageSO.GetAppearEnemyTables.Count;
         //FieldAreaManagerScriptを取得する
         _fieldAreaScript = GameObject.FindAnyObjectByType<FieldAreaManagerScript>();
-        //コンポーネント初期化
+        //各コンポーネント初期化
         _fieldAreaScript.Init(this);
         _characterManager.Init(this);
         _playBoardManager.Init(this);
         _bossIncoming.Init();
+        _stageClear.Init();
+        _gameOver.Init();
         //ステージ情報表示
         ApplyStageUIs();
         // (デバッグ用)敵を画面に出現させる
@@ -77,10 +82,7 @@ public class BattleManagerScript : MonoBehaviour
             }, false
         );
     }
-    /// <summary>
-    /// 更新処理
-    /// </summary>
-   
+
     #region ステージ進行関連
     /// <summary>
 	/// ステージの進行度を進めて戦闘を開始するかステージを終了する
@@ -118,13 +120,18 @@ public class BattleManagerScript : MonoBehaviour
         //ステージクリアクリア確認
         if (_nowProgress >= _stageSO.GetAppearEnemyTables.Count)
         {
-            //全ての敵との戦闘に勝利した
-            Debug.Log("ステージクリア");
+            //ステージクリア演出開始
+            _stageClear.StartAnimation();
+
+
+
+            //進行度初期化仮置き
+            _nowProgress = 0;
         }
 
         //敵キャラクター出現処理
         //出現する敵を決定
-        List<EnemyStatusSO> appearEnemyTable = _stageSO.GetAppearEnemyTables[_nowProgress]._appearEnemys;
+        List<EnemyStatusSO> appearEnemyTable = _stageSO.GetAppearEnemyTables[_nowProgress].GetAppearEnemys;
         int rand = Random.Range(0, appearEnemyTable.Count);
         _characterManager.SpawnEnemy(appearEnemyTable[rand]);
         //出現する敵が一種類しか居ないならボス用演出
@@ -185,7 +192,8 @@ public class BattleManagerScript : MonoBehaviour
                     // プレイヤー敗北時
                     if (isPlayerLose)
                     {
-                        Debug.Log("ゲームオーバー");
+                        //ゲームオーバー演出開始
+                        _gameOver.StartAnimation();
                     }
                     // プレイヤー勝利時
                     else if (isPlayerWin)
