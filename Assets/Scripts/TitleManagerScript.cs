@@ -35,7 +35,7 @@ public class TitleManagerScript : MonoBehaviour
         _stageSelectWindow.Init(this);
 
         //ゲーム起動時のアニメーションを再生
-        InitAnimation();
+        //InitAnimation();
 
         //ウィンドウ背景オブジェクトを無効化
         SetWindowBackPanelActive(false);

@@ -127,15 +127,15 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     /// </summary>
     public void BackToBasePos()
     {
-        // 既に実行中の移動アニメーションがあれば停止
+        //既に実行中の移動アニメーションがあれば停止
         if (_moveTween != null)
         {
             _moveTween.Kill();
         }
-        // 指定地点まで移動するアニメーション(DOTween)
+        //指定地点まで移動するアニメーション(DOTween)
         _moveTween = _rectTransform
-            .DOMove(_basePos, MoveTime) // 移動Tween
-            .SetEase(Ease.OutQuart);    // 変化の仕方を指定
+            .DOMove(_basePos, MoveTime) //移動Tween
+            .SetEase(Ease.OutQuart);    //変化の仕方を指定
     }
     /// <summary>
 	/// カードを指定のゾーンに設置する

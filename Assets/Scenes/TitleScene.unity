@@ -796,6 +796,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7037981269430038199, guid: 1ca780068076fc24b83ff2287b2de38c, type: 3}
+      propertyPath: _allPlayerCardsList.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7037981269430038199, guid: 1ca780068076fc24b83ff2287b2de38c, type: 3}
+      propertyPath: _playerInitialDeck.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: ee7a0e3b8b85ee347a874d9a6277e9fc, type: 2}
+    - target: {fileID: 7037981269430038199, guid: 1ca780068076fc24b83ff2287b2de38c, type: 3}
+      propertyPath: _playerInitialDeck.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: ee7a0e3b8b85ee347a874d9a6277e9fc, type: 2}
+    - target: {fileID: 7037981269430038199, guid: 1ca780068076fc24b83ff2287b2de38c, type: 3}
+      propertyPath: _allPlayerCardsList.Array.data[6]
+      value: 
+      objectReference: {fileID: 11400000, guid: abc6e254ae2eff543a0cdd0e55ca5f0c, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -35,10 +35,6 @@ public class DataScript : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        else
-        {
-
-        }
         _date = this;
         //è¡Ç¶Ç»Ç¢ÇÊÇ§Ç…Ç∑ÇÈ
         DontDestroyOnLoad(gameObject);

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -155,7 +154,6 @@ public class StageSelectWindowScript : MonoBehaviour
     {
         // 選択したステージ番号を記憶
         DataScript._date._nowStageID = _selectStageID;
-        Debug.Log(_selectStageID);
         // シーン切り替え
         SceneManager.LoadScene(_nextSceneName);
 
