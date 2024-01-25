@@ -58,6 +58,7 @@ public class BattleManagerScript : MonoBehaviour
     /// </summary>
     private void Start()
     {
+        _stageSO = DataScript._date.GetStageSOs[DataScript._date._nowStageID];
         //進行度初期化
         _nowProgress = -1;
         //ステージボスが出現する進行度を取得

@@ -1,6 +1,7 @@
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameOverScript : MonoBehaviour
 {
@@ -70,6 +71,7 @@ public class GameOverScript : MonoBehaviour
     /// </summary>
     public void GoTitleScene()
     {
-        // ここにシーン切り替え処理
+        //タイトルシーンに切り替える
+        SceneManager.LoadScene("TitleScene");
     }
 }

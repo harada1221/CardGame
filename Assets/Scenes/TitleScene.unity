@@ -205,7 +205,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 66560957}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1982408218}
+        m_TargetAssemblyTypeName: StageSelectWindowScript, Assembly-CSharp
+        m_MethodName: StageStartButton
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &66560957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -681,7 +693,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 304185531}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1982408218}
+        m_TargetAssemblyTypeName: StageSelectWindowScript, Assembly-CSharp
+        m_MethodName: RightScrollButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &304185531
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1297,7 +1321,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 690040605}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1982408218}
+        m_TargetAssemblyTypeName: StageSelectWindowScript, Assembly-CSharp
+        m_MethodName: LeftScrollButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &690040605
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2748,6 +2784,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 051685fdfd6532e4eadba25c80d27f56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _stageNameText: {fileID: 1288319445}
+  _stageDifficultyText: {fileID: 1201109797}
+  _battleNumText: {fileID: 500025150}
+  _stageIconImage: {fileID: 804926500}
+  _stageOrderImages:
+  - {fileID: 815233316}
+  - {fileID: 1594660594}
+  _nextSceneName: GameScene
 --- !u!1 &2138230916
 GameObject:
   m_ObjectHideFlags: 0

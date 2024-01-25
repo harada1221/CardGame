@@ -18,8 +18,6 @@ public class FieldAreaManagerScript : MonoBehaviour
     private RectTransform _canvasRectTransform = default;
     [SerializeField, Header("メインカメラ")]
     private Camera _mainCamera = default;
-    [SerializeField, Header("プレイヤーデッキのスクリプト")]
-    private PlayerDeckDataScript _playerDeckDataScript = default;
     [SerializeField, Header("デッキアイコンのオブジェクト")]
     private GameObject _deckIconObject = default;
     [SerializeField, Header("デッキの残り枚数表示テキスト")]
@@ -124,12 +122,11 @@ public class FieldAreaManagerScript : MonoBehaviour
         _playerDeckData = new List<CardDataSO>();
         _playerDeckDataBackUp = new List<CardDataSO>();
         //デッキデータ取得
-        foreach (int cardData in _playerDeckDataScript.GetDeckCardList)
+        foreach (int cardData in PlayerDeckDataScript._deckCardList)
         {
-            _playerDeckData.Add(_playerDeckDataScript.GetCardDatasBySerialNum[cardData]);
-            _playerDeckDataBackUp.Add(_playerDeckDataScript.GetCardDatasBySerialNum[cardData]);
+            _playerDeckData.Add(PlayerDeckDataScript._cardDatasBySerialNum[cardData]);
+            _playerDeckDataBackUp.Add(PlayerDeckDataScript._cardDatasBySerialNum[cardData]);
         }
-        Debug.Log(_playerDeckData.Count);
         //デッキ残り枚数表示
         PrintPlayerDeckNum();
     }

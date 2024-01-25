@@ -46,6 +46,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerDeckData: {fileID: 7037981269430038199}
+  _stageSOs:
+  - {fileID: 11400000, guid: 452f8f4b6ad8de249a23ace80dce91af, type: 2}
+  - {fileID: 11400000, guid: 1c37d3e835b306d458b1d4774a7623bd, type: 2}
 --- !u!114 &7037981269430038199
 MonoBehaviour:
   m_ObjectHideFlags: 0

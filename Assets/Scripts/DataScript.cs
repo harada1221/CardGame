@@ -11,37 +11,50 @@ using UnityEngine;
 
 public class DataScript : MonoBehaviour
 {
-    [SerializeField ,Header("シングルトン維持用")]
-    private static DataScript _date = default;
-	[SerializeField, Header("デッキ管理クラス")]
-	private PlayerDeckDataScript _playerDeckData = default;
-	/// <summary>
-	/// 初期設定
-	/// </summary>
-	private void Awake()
-	{
-		//シングルトン用処理
-		if (_date != null)
-		{
-			Destroy(gameObject);
-			return;
-		}
-		_date = this;
-		//消えないようにする
-		DontDestroyOnLoad(gameObject);
-		//ゲーム起動時処理
-		InitialProcess();
-	}
-	/// <summary>
-	/// ゲーム開始時に乱数生成
-	/// </summary>
-	private void InitialProcess()
+    [SerializeField, Header("シングルトン維持用")]
+    public static DataScript _date = default;
+    [SerializeField, Header("デッキ管理クラス")]
+    private PlayerDeckDataScript _playerDeckData = default;
+    [SerializeField, Header("選択可能ステージ")]
+    private List<StageSO> _stageSOs = default;
+    //進行中ステージID
+    public int _nowStageID = default;
+
+
+    public int GetNowStageID { get => _nowStageID; }
+    public int SetNowStageID { set { _nowStageID = value; } }
+    public List<StageSO> GetStageSOs { get => _stageSOs; }
+    /// <summary>
+    /// 初期設定
+    /// </summary>
+    private void Awake()
     {
-		//乱数シード値初期化
-		Random.InitState(System.DateTime.Now.Millisecond);
-		//プレイヤーデッキデータの初期処理
-		_playerDeckData.Init();
-		//プレイヤー所持カードデータ初期化
-		_playerDeckData.DataInitialize();
-	}
+        //シングルトン用処理
+        if (_date != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        else
+        {
+
+        }
+        _date = this;
+        //消えないようにする
+        DontDestroyOnLoad(gameObject);
+        //ゲーム起動時処理
+        InitialProcess();
+    }
+    /// <summary>
+    /// ゲーム開始時に乱数生成
+    /// </summary>
+    private void InitialProcess()
+    {
+        //乱数シード値初期化
+        Random.InitState(System.DateTime.Now.Millisecond);
+        //プレイヤーデッキデータの初期処理
+        _playerDeckData.Init();
+        //プレイヤー所持カードデータ初期化
+        _playerDeckData.DataInitialize();
+    }
 }

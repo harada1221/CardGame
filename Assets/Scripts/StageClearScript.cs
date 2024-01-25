@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
 
 public class StageClearScript : MonoBehaviour
 {
@@ -74,6 +75,7 @@ public class StageClearScript : MonoBehaviour
     /// </summary>
     public void GoTitleScene()
     {
-        // ここにシーン切り替え処理
+        //タイトルシーンに切り替える
+        SceneManager.LoadScene("TitleScene");
     }
 }
