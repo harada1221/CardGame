@@ -46,6 +46,8 @@ public class CardUIScript : MonoBehaviour
     private Sprite _cardBackSpritePlayer = default;
     [SerializeField, Header(" 敵側カード背景")]
     private Sprite _cardBackSpriteEnemy = default;
+    [SerializeField,Header("ボーナスカード背景")] 
+    private Sprite _cardBackSpriteBonus = null;
 
     //作成した効果Textリスト
     private Dictionary<CardEffectDefineScript, Text> _cardEffectTextDic;
@@ -78,6 +80,10 @@ public class CardUIScript : MonoBehaviour
         else if (cardControllerChara == CardScript.CharaID_Enemy)
         {
             _cardBackImage.sprite = _cardBackSpriteEnemy;
+        }
+        else if (cardControllerChara == CardScript.CharaID_Bonus)
+        {
+            _cardBackImage.sprite = _cardBackSpriteBonus;
         }
     }
     /// <summary>

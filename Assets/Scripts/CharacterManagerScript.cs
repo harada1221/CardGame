@@ -5,11 +5,8 @@
  * 制作日　12月１日
  *--------------------------------------------------------------------------- 
 */
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using DG.Tweening;
+
 public class CharacterManagerScript : MonoBehaviour
 {
     [SerializeField, Header("生成した敵オブジェクトの親")]

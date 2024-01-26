@@ -29,7 +29,7 @@ public class StageClearScript : MonoBehaviour
     /// </summary>
     public void Init()
     {
-        // UI”ñ•\Ž¦
+        //UI”ñ•\Ž¦
         _canvasGroup.alpha = 0.0f;
         _canvasGroup.interactable = false;
         _canvasGroup.blocksRaycasts = false;

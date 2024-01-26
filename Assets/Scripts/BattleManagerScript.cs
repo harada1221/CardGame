@@ -5,7 +5,6 @@
  * 制作日　12月１日
  *--------------------------------------------------------------------------- 
 */
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,8 +16,8 @@ public class BattleManagerScript : MonoBehaviour
     private FieldAreaManagerScript _fieldAreaScript = default;
     [SerializeField, Header("キャラクターデータ管理クラス")]
     private CharacterManagerScript _characterManager = default;
-    //[SerializeField, Header("出現敵データ")]
-    //private EnemyStatusSO _enemyStatusSO = default;
+    [SerializeField, Header("報酬画面クラス")]
+    private RewardScript _rewardPanel = default;
     [SerializeField, Header("カード効果発動管理クラス")]
     private PlayBoardManagerScript _playBoardManager = default;
 
@@ -32,13 +31,21 @@ public class BattleManagerScript : MonoBehaviour
     private Image _progressGageImage = default;
     [SerializeField, Header("攻略中ステージ")]
     private StageSO _stageSO = default;
-    [SerializeField,Header("ボス表示")]
+    [SerializeField, Header("ボス表示")]
     private BossIncomingScript _bossIncoming = default;
-    [SerializeField,Header("ステージクリアクラス")]
+    [SerializeField, Header("ステージクリアクラス")]
     private StageClearScript _stageClear = default;
-    [SerializeField,Header("ゲームオーバークラス")]
+    [SerializeField, Header("ゲームオーバークラス")]
     private GameOverScript _gameOver = default;
-
+    // プレイヤーデータUI
+    [SerializeField, Header("経験値量Text")]
+    private Text _playerEXPText = default;
+    [SerializeField, Header("所持金貨Text")]
+    private Text _playerGoldText = default;
+    //経験値量Text表示用変数
+    private int _playerEXPDisp = default;
+    //所持金貨Text表示用変数
+    private int _playerGoldDisp = default; 
 
     //現在の経過ターン
     private int _nowTurns = default;
@@ -46,8 +53,17 @@ public class BattleManagerScript : MonoBehaviour
     private int _nowProgress = default;
     //ボス出現進行度
     private int _battleNum = default;
+    //定数定義
     //ゲージ表示演出時間
     private const float GageAnimationTime = 2.0f;
+    private const float AnimationTime = 1.0f;
+    //ボーナス量計算時のステージ進行度加算量
+    private const int BonusValueBase = 4;
+    //ボーナス量のランダム幅:最小
+    private const float BonusRandomMulti_Min = 0.8f;
+    //ボーナス量のランダム幅:最大
+    private const float BonusRandomMulti_Max = 1.4f;
+
 
     public FieldAreaManagerScript GetFieldManager { get => _fieldAreaScript; }
     public CharacterManagerScript GetCharacterManager { get => _characterManager; }
@@ -72,9 +88,13 @@ public class BattleManagerScript : MonoBehaviour
         _bossIncoming.Init();
         _stageClear.Init();
         _gameOver.Init();
+        _rewardPanel.Init(this);
+        //経験値・金貨UI初期化
+        ApplyEXPText();
+        ApplyGoldText();
         //ステージ情報表示
         ApplyStageUIs();
-        // (デバッグ用)敵を画面に出現させる
+        //(デバッグ用)敵を画面に出現させる
         DOVirtual.DelayedCall(
             1.0f, // 1秒遅延
             () =>
@@ -93,7 +113,7 @@ public class BattleManagerScript : MonoBehaviour
         //進行度を進める
         _nowProgress++;
 
-        // 進行度を0.0f~1.0fで取得して表示
+        //進行度を0.0f~1.0fで取得して表示
         float progressRatio = (float)(_nowProgress % _battleNum + 1) / _battleNum;
         progressRatio = Mathf.Clamp(progressRatio, 0.0f, 1.0f);
         if (progressRatio < 0)
@@ -123,11 +143,6 @@ public class BattleManagerScript : MonoBehaviour
         {
             //ステージクリア演出開始
             _stageClear.StartAnimation();
-
-
-
-            //進行度初期化仮置き
-            _nowProgress = 0;
         }
 
         //敵キャラクター出現処理
@@ -199,8 +214,8 @@ public class BattleManagerScript : MonoBehaviour
                     // プレイヤー勝利時
                     else if (isPlayerWin)
                     {
-                        // 進行度増加
-                        ProgressingStage();
+                        //勝利画面表示
+                        _rewardPanel.OpenWindow(_characterManager.GetEnemyDate);
                     }
                 }
             );
@@ -208,7 +223,7 @@ public class BattleManagerScript : MonoBehaviour
             return;
         }
 
-        // 次のターン開始
+        //次のターン開始
         TurnStart();
     }
     #endregion
@@ -238,6 +253,68 @@ public class BattleManagerScript : MonoBehaviour
 	public void ShowProgressGage(float ratio)
     {
         _progressGageImage.DOFillAmount(ratio, GageAnimationTime);
+    }
+    /// <summary>
+	/// 経験値量Textの表示を更新する
+	/// </summary>
+	public void ApplyEXPText()
+    {
+        //少しずつ数字が変化する演出
+        DOTween.To(() =>
+            _playerEXPDisp, (n) => _playerEXPDisp = n, DataScript._date.GetPlayerExp, AnimationTime)
+            .OnUpdate(() =>
+            {
+                _playerEXPText.text = _playerEXPDisp.ToString("#,0") + " EXP";
+            });
+    }
+    /// <summary>
+    /// 所持金貨Textの表示を更新する
+    /// </summary>
+    public void ApplyGoldText()
+    {
+        //少しずつ数字が変化する演出
+        DOTween.To(() =>
+            _playerGoldDisp, (n) => _playerGoldDisp = n, DataScript._date.GetPlayerGold, AnimationTime)
+            .OnUpdate(() =>
+            {
+                _playerGoldText.text = _playerGoldDisp.ToString("#,0") + " G";
+            });
+    }
+    #endregion
+
+    #region ステージ戦闘報酬
+    /// <summary>
+	/// 敵撃破ボーナスの入手金貨量を返す
+	/// </summary>
+	public int GetBonusGoldValue()
+    {
+        //基本獲得量
+        int value = _stageSO.GetGold * (BonusValueBase + _nowProgress);
+        //ランダム幅適用
+        value = (int)(value * Random.Range(BonusRandomMulti_Min, BonusRandomMulti_Max));
+        return value;
+    }
+    /// <summary>
+	/// 敵撃破ボーナスの入手経験値量を返す
+	/// </summary>
+	public int GetBonusEXPValue()
+    {
+        //基本獲得量
+        int value = _stageSO.GetExp * (BonusValueBase + _nowProgress);
+        //ランダム幅適用
+        value = (int)(value * Random.Range(BonusRandomMulti_Min, BonusRandomMulti_Max));
+        return value;
+    }
+    /// <summary>
+    /// 敵撃破ボーナスのHP回復量を返す
+    /// </summary>
+    public int GetBonusHealValue()
+    {
+        //基本回復量
+        int value = _stageSO.GetHeal;
+        //ランダム幅適用
+        value = (int)(value * Random.Range(BonusRandomMulti_Min, BonusRandomMulti_Max));
+        return value;
     }
     #endregion
 }

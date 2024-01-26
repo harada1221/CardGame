@@ -25,3 +25,6 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 9f87daf81ac8c5747b3d8bccf0c4ffdd, type: 2}
   - _appearEnemys:
     - {fileID: 11400000, guid: 20cbd10d9f4d76541ac9a8490dfa825f, type: 2}
+  _bonus_EXP: 6
+  _bonus_Gold: 6
+  _bonus_Heal: 6

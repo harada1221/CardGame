@@ -19,11 +19,18 @@ public class DataScript : MonoBehaviour
     private List<StageSO> _stageSOs = default;
     //進行中ステージID
     public int _nowStageID = default;
+    //プレイヤーデータ
+    //所持金貨
+    private int _playerGold;
+    // 獲得済み経験値
+    private int _playerEXP;
 
 
     public int GetNowStageID { get => _nowStageID; }
     public int SetNowStageID { set { _nowStageID = value; } }
     public List<StageSO> GetStageSOs { get => _stageSOs; }
+    public int GetPlayerGold { get => _playerGold; }
+    public int GetPlayerExp { get => _playerEXP; }
     /// <summary>
     /// 初期設定
     /// </summary>
@@ -53,4 +60,22 @@ public class DataScript : MonoBehaviour
         //プレイヤー所持カードデータ初期化
         _playerDeckData.DataInitialize();
     }
+    #region 各種プレイヤーデータ変更処理
+    /// <summary>
+    /// プレイヤーの所持金貨を変更する
+    /// </summary>
+    /// <param name="value">変化量</param>
+    public void ChangePlayerGold(int value)
+    {
+        _playerGold += value;
+    }
+    /// <summary>
+    /// プレイヤーの経験値量を変更する
+    /// </summary>
+    /// <param name="value">変化量</param>
+    public void ChangePlayerEXP(int value)
+    {
+       _playerEXP += value;
+    }
+    #endregion
 }

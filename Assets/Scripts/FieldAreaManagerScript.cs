@@ -35,6 +35,7 @@ public class FieldAreaManagerScript : MonoBehaviour
 
     //戦闘画面マネージャー
     private BattleManagerScript _battleManager = default;
+    private PlayerDeckDataScript _playerDeckDataScript = default;
     //ダミー手札制御クラス
     private DammyHandScript _dammyHand = default;
     //プレイヤーの現在のデッキ
@@ -67,7 +68,8 @@ public class FieldAreaManagerScript : MonoBehaviour
     private void Start()
     {
         _dammyHand = GameObject.FindObjectOfType<DammyHandScript>();
-          //デッキデータ生成
+        _playerDeckDataScript = GameObject.FindObjectOfType<PlayerDeckDataScript>();
+        //デッキデータ生成
         _playerDeckData = new List<CardDataSO>();
         _playerDeckDataBackUp = new List<CardDataSO>();
     }
@@ -122,10 +124,10 @@ public class FieldAreaManagerScript : MonoBehaviour
         _playerDeckData = new List<CardDataSO>();
         _playerDeckDataBackUp = new List<CardDataSO>();
         //デッキデータ取得
-        foreach (int cardData in PlayerDeckDataScript._deckCardList)
+        foreach (int cardData in _playerDeckDataScript.GetDeckCardList)
         {
-            _playerDeckData.Add(PlayerDeckDataScript._cardDatasBySerialNum[cardData]);
-            _playerDeckDataBackUp.Add(PlayerDeckDataScript._cardDatasBySerialNum[cardData]);
+            _playerDeckData.Add(_playerDeckDataScript.GetCardDatasBySerialNum[cardData]);
+            _playerDeckDataBackUp.Add(_playerDeckDataScript.GetCardDatasBySerialNum[cardData]);
         }
         //デッキ残り枚数表示
         PrintPlayerDeckNum();
@@ -158,7 +160,8 @@ public class FieldAreaManagerScript : MonoBehaviour
         int enemyAttackOrderID = _battleManager.GetNowTurns % enemyData.GetUseCardDatas.Count;
 
         //敵カード設置処理
-        EnemyStatusSO.EnemyUseCardData useCardDatasInThisTurn = enemyData.GetUseCardDatas[enemyAttackOrderID]; // このターンの使用カードリスト
+        //このターンの使用カードリスト
+        EnemyStatusSO.EnemyUseCardData useCardDatasInThisTurn = enemyData.GetUseCardDatas[enemyAttackOrderID]; 
         for (int i = 0; i < PlayBoardManagerScript.PlayBoardCardNum; i++)
         {
             //各ゾーンに対する設置カードを取得
@@ -195,7 +198,7 @@ public class FieldAreaManagerScript : MonoBehaviour
             _cardInstances.Add(objCard);
 
             //カード初期設定
-            objCard.Init(this, _battleManager.GetCharacterManager.GetEnemyPosition());
+            objCard.InitField(this, _battleManager.GetCharacterManager.GetEnemyPosition());
             objCard.PutToZone(areaType, targetPosition);
             //敵IDを指定
             objCard.SetInitialCardData(cardData, CardScript.CharaID_Enemy);
@@ -212,8 +215,6 @@ public class FieldAreaManagerScript : MonoBehaviour
         {
             return;
         }
-
-
         //実行ボタンを一時的に無効化
         _cardPlayButton.interactable = false;
         //効果実行中
@@ -271,7 +272,7 @@ public class FieldAreaManagerScript : MonoBehaviour
         _playerDeckData.Remove(targetCard);
 
         //カード初期設定
-        objCard.Init(this, _deckTransForm.position);
+        objCard.InitField(this, _deckTransForm.position);
         objCard.PutToZone(CardZoneScript.ZoneType.Hand, _dammyHand.GetHandPos(handID));
         objCard.SetInitialCardData(targetCard, CardScript.CharaID_Player);
 

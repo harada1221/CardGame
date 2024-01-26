@@ -29,4 +29,4 @@ MonoBehaviour:
   _bonusOptions: 3
   _bonusPoint: 2
   _bonusCardList:
-  - {fileID: 11400000, guid: fda81ab7aaf37cc408aa97b7696e0945, type: 2}
+  - {fileID: 11400000, guid: 7cb19dd2ac932ae4c993c0dd2e8a4d88, type: 2}

@@ -14,9 +14,10 @@ public class TitleManagerScript : MonoBehaviour
     private RectTransform _titleLogoRectTransform = default;
     [SerializeField, Header("ボタン背景RectTransformリスト")]
     private List<RectTransform> _titleButtonUIs = default;
-
     [SerializeField, Header("ウィンドウ背景パネルオブジェクト")]
     private GameObject _windowBackObject = default;
+    [SerializeField, Header("デッキ編集ウィンドウクラス")]
+    private DeckEditWindowScript _deckEditWindow = default;
 
     //各種ボタン関連UIのX方向移動量
     private const float ButtonsUIMoveLengthX = 400.0f;
@@ -29,10 +30,11 @@ public class TitleManagerScript : MonoBehaviour
     /// <summary>
     /// 初期化処理
     /// </summary>
-    void Start()
+    private void Start()
     {
         //管理下コンポーネント初期化
         _stageSelectWindow.Init(this);
+        _deckEditWindow.Init(this);
 
         //ゲーム起動時のアニメーションを再生
         //InitAnimation();

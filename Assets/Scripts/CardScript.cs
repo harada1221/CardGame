@@ -24,12 +24,15 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     [SerializeField, Header("オブジェクトのCanvasGroup")]
     private CanvasGroup _canvasGroup = default;
 
+    //デッキ編集画面用
+    private DeckEditWindowScript _deckEditWindow = default;
     //ドラッグ終了後に戻ってくる座標
     private Vector2 _basePos = default;
     //移動Tween
     private Tween _moveTween = default;
     //カードゾーンの種類
     private CardZoneScript.ZoneType _nowZone = default;
+    public bool isInDeckCard = false;
 
     //基になるカードデータ
     private CardDataSO _cardDate = default;
@@ -39,6 +42,8 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private int _forcePoint = default;
     //カードを使用キャラクター
     private int _controllerCharaID = default;
+    // 戦闘報酬画面用
+    private RewardScript _rewardPanel = default;
 
     //カード移動アニメーション時間
     private const float MoveTime = 0.4f;
@@ -51,6 +56,8 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public const int CharaID_Enemy = 1;
     //キャラクターID:(無し)
     public const int CharaID_None = -1;
+    //キャラクターID:ボーナス用
+    public const int CharaID_Bonus = 2;	
     //カードアイコンの最大数
     private const int MaxIcons = 6;
     //カード効果の最大数
@@ -72,15 +79,16 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public int GetControllerCharaID { get => _controllerCharaID; }
     public List<CardEffectDefineScript> GetCardEffects { get => _cardEffects; }
     public int GetForcePoint { get => _forcePoint; }
+    public CardDataSO GetCardData { get => _cardDate; }
     #endregion
 
     #region 初期処理
     /// <summary>
-    /// 初期化処理
+    /// 初期化処理フィールドマネージャーから呼び出し
     /// </summary>
     /// <param name="_fieldManager">フィールドマネージャー</param>
     /// <param name="initPos">初期座標</param>
-    public void Init(FieldAreaManagerScript _fieldManager, Vector2 initPos)
+    public void InitField(FieldAreaManagerScript _fieldManager, Vector2 initPos)
     {
         //FieldAreaManagerScript参照取得
         _fieldAreaScript = _fieldManager;
@@ -97,6 +105,26 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         _cardEffects = new List<CardEffectDefineScript>();
     }
     /// <summary>
+	/// 初期化処理デッキ編集クラスから呼出用
+	/// </summary>
+	/// <param name="deckEditWindow">DeckEditWindow参照</param>
+	/// <param name="_isInDeckCard">デッキ内カードフラグ</param>
+	public void InitDeck(DeckEditWindowScript deckEditWindow, bool _isInDeckCard)
+    {
+        _deckEditWindow = deckEditWindow;
+        isInDeckCard = _isInDeckCard;
+        InitField(null, Vector2.zero);
+    }
+    /// <summary>
+	/// 初期化処理RewardScript画面から呼出し
+	/// </summary>
+	public void InitReward(RewardScript rewardPanel)
+    {
+        _rewardPanel = rewardPanel;
+        InitField(null, Vector2.zero);
+    }
+
+    /// <summary>
     /// カードのパラメータを取得する
     /// </summary>
     /// <param name="cardData"></param>
@@ -105,7 +133,7 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         //カードデータ取得
         _cardDate = cardData;
-        // カード名
+        //カード名
         _cardUI.SetCardNameText(cardData.GetCardName);
 
         //カード効果リスト
@@ -115,9 +143,10 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         }
         //強度を設定
         SetForcePoint(cardData.GetForce);
-        // カード使用者データ
+        //カード使用者データ
         _controllerCharaID = ControllerCharaID;
-        _cardUI.SetCardBackSprite(ControllerCharaID); // カード背景UIに適用
+        //カード背景UIに適用
+        _cardUI.SetCardBackSprite(ControllerCharaID);
     }
     #endregion
 
@@ -178,8 +207,19 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     /// <param name="eventData">クリック情報</param>
     public void OnPointerDown(PointerEventData eventData)
     {
-        //クリック開始処理
-        _fieldAreaScript.StartDragging(this);
+        //ドラッグ開始処理
+        if (_fieldAreaScript != null)
+        {
+            _fieldAreaScript.StartDragging(this);
+        }
+        else if (_deckEditWindow != null)
+        {
+            _deckEditWindow.SelectCard(this);
+        }
+        else if (_rewardPanel != null)
+        {
+            _rewardPanel.SelectCard(this);
+        }
     }
     /// <summary>
     /// クリックが終わった時に実行する
@@ -188,7 +228,26 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public void OnPointerUp(PointerEventData eventData)
     {
         //クリック終了処理
-        _fieldAreaScript.EndDragging();
+        if (_fieldAreaScript != null)
+        {
+            _fieldAreaScript.EndDragging();
+        }
+            
+    }
+    /// <summary>
+	/// プレイヤーが保管中のカード数量を表示(デッキ編集時用)
+	/// </summary>
+	public void ShowCardAmountInStorage()
+    {
+        int amount = PlayerDeckDataScript._storageCardList[_cardDate.GetSerialNum];
+        _cardUI.SetAmountText(amount);
+    }
+    /// <summary>
+    /// カードの強調表示状態を変更する
+    /// </summary>
+    public void SetCardHilight(bool mode)
+    {
+        _cardUI.SetHilightImage(mode);
     }
     #endregion
 
@@ -332,7 +391,7 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     }
     #endregion
 
-    #region その他Get・Set系
+    #region その他Get
     /// <summary>
     /// 効果リストの中に該当する効果があるか
     /// </summary>
