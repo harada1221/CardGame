@@ -17,13 +17,18 @@ public class DataScript : MonoBehaviour
     private PlayerDeckDataScript _playerDeckData = default;
     [SerializeField, Header("選択可能ステージ")]
     private List<StageSO> _stageSOs = default;
+    [SerializeField, Header("プレイヤーの最大HP")]
+    private int _playerMaxHP = 20;
+    [SerializeField, Header("プレイヤーの各ターンの手札枚数")]
+    private int _playerHandNum = 5;
     //進行中ステージID
     public int _nowStageID = default;
     //プレイヤーデータ
     //所持金貨
-    private int _playerGold;
-    // 獲得済み経験値
-    private int _playerEXP;
+    private int _playerGold = default;
+    //獲得済み経験値
+    private int _playerEXP = default;
+
 
 
     public int GetNowStageID { get => _nowStageID; }
@@ -31,6 +36,8 @@ public class DataScript : MonoBehaviour
     public List<StageSO> GetStageSOs { get => _stageSOs; }
     public int GetPlayerGold { get => _playerGold; }
     public int GetPlayerExp { get => _playerEXP; }
+    public int GetPlayerMaxHP { get => _playerMaxHP; }
+    public int GetPlayerHandNum { get => _playerHandNum; }
     /// <summary>
     /// 初期設定
     /// </summary>
@@ -75,7 +82,23 @@ public class DataScript : MonoBehaviour
     /// <param name="value">変化量</param>
     public void ChangePlayerEXP(int value)
     {
-       _playerEXP += value;
+        _playerEXP += value;
+    }
+    /// <summary>
+	/// プレイヤーの最大HPを変更する
+	/// </summary>
+	/// <param name="value">変化量</param>
+	public void ChangePlayerMaxHP(int value)
+    {
+        _playerMaxHP += value;
+    }
+    /// <summary>
+    /// プレイヤーの各ターンの手札枚数を変更する
+    /// </summary>
+    /// <param name="value">変化量</param>
+    public void ChangePlayerHandNum(int value)
+    {
+        _playerHandNum += value;
     }
     #endregion
 }

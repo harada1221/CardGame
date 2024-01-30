@@ -6,7 +6,7 @@ public class RewardScript : MonoBehaviour
 {
     [SerializeField, Header("親CanvasGroup")]
     private CanvasGroup _canvasGroup = default;
-    // UIオブジェクト
+    //UIオブジェクト
     [SerializeField, Header("報酬Text")]
     private Text _rewardText = default;
     [SerializeField, Header("決定Button")]
@@ -19,20 +19,21 @@ public class RewardScript : MonoBehaviour
     private GameObject _cardPrefab = default;
     [SerializeField, Header("ボーナスカードオブジェクトの親")]
     private Transform _cardsParent = default;
+    [SerializeField, Header("ボーナス専用カードデータのリスト")]
+    private List<CardDataSO> _bonusCardSOsList = default;
     //戦闘画面マネージャ
     private BattleManagerScript _battleManager = default;
     //ボーナスカードリスト
     private List<CardScript> _cardInstances = default;
-
     //選択中のボーナスカード情報
     private List<CardScript> _selectingBonus = default;
-
     //戦闘した敵のデータ
     private EnemyStatusSO _enemySO = default;
 
-    //定数定義
     //画面のフェードイン・アウト時間
     private const float FadeTime = 1.0f;
+    //ボーナス専用カードの出現率
+    private const float Percentage_BonusOnlyCards = 0.5f;
 
     /// <summary>
     /// 初期化処理
@@ -73,7 +74,7 @@ public class RewardScript : MonoBehaviour
         CreateBonusCards();
         //戦闘結果Text表示
         string resultMes = this._enemySO.GetEnemyName;
-        resultMes += "を撃破した！\n" +"<size=30>獲得ボーナスを" +this._enemySO.GetBonusPoint +"つ選んでください</size>";
+        resultMes += "を撃破した！\n" + "<size=30>獲得ボーナスを" + this._enemySO.GetBonusPoint + "つ選んでください</size>";
         _rewardText.text = resultMes;
         //ボタンUI初期設定
         ShowRemainingSelections();
@@ -104,12 +105,40 @@ public class RewardScript : MonoBehaviour
         CardScript objCard = obj.GetComponent<CardScript>();
         _cardInstances.Add(objCard);
 
-        // 出現するカードをランダムに決定する
-        CardDataSO targetCard = _enemySO.GetBonusCardList[Random.Range(0, _enemySO.GetBonusCardList.Count)];
+        //出現するカードをランダムに決定する
+        CardDataSO targetCard = null;
+        //ボーナス専用カード出現時フラグ
+        bool isBonusOnlyCard;
+        if (Random.value < Percentage_BonusOnlyCards)
+        {
+            //ボーナス専用カード
+            isBonusOnlyCard = true;
+            //カードの種類を決定
+            int rand = Random.Range(0, _bonusCardSOsList.Count);
+            targetCard = _bonusCardSOsList[rand];
+        }
+        else
+        {
+            //プレイヤーが獲得できるカード
+            targetCard = _enemySO.GetBonusCardList[Random.Range(0, _enemySO.GetBonusCardList.Count)];
+            isBonusOnlyCard = false;
+        }
 
         //カード初期設定
         objCard.InitReward(this);
-        objCard.SetInitialCardData(targetCard, CardScript.CharaID_Player);
+        //ボーナス専用カードの場合は背景に別のものを使用する
+        if (isBonusOnlyCard)
+        {
+            objCard.SetInitialCardData(targetCard, CardScript.CharaID_Bonus);
+        }
+        else
+        {
+            objCard.SetInitialCardData(targetCard, CardScript.CharaID_Player);
+        }
+        // ボーナスカードの場合各種効果量を適用する
+        objCard.EnhanceCardEffect(CardEffectDefineScript.CardEffect.Bonus_EXP, _battleManager.GetBonusEXPValue());
+        objCard.EnhanceCardEffect(CardEffectDefineScript.CardEffect.Bonus_Gold, _battleManager.GetBonusGoldValue());
+        objCard.EnhanceCardEffect(CardEffectDefineScript.CardEffect.Bonus_Heal, _battleManager.GetBonusHealValue());
     }
 
     /// <summary>
@@ -166,7 +195,7 @@ public class RewardScript : MonoBehaviour
         else
         {
             //選択未完了時
-            mes = "あと" + selectingNum +"つ選択";
+            mes = "あと" + selectingNum + "つ選択";
             //ボタン無効化
             _decideButton.interactable = false;
         }
@@ -179,27 +208,27 @@ public class RewardScript : MonoBehaviour
     /// </summary>
     public void Button_Decide()
     {
-      
-            //ボーナス適用
-            foreach (CardScript card in _selectingBonus)
-            {
-                ApplyBonus(card);
-            }
-            //カードオブジェクト消去
-            foreach (CardScript card in _cardInstances)
-            {
-                Destroy(card.gameObject);
-            }
-            //各リストを初期化
-            _cardInstances.Clear();
-            _selectingBonus.Clear();
 
-            //戦闘結果画面オブジェクト非アクティブ化
-            gameObject.SetActive(false);
-            //ステージ進行再開
-            _battleManager.ProgressingStage();
-       
-       
+        //ボーナス適用
+        foreach (CardScript card in _selectingBonus)
+        {
+            ApplyBonus(card);
+        }
+        //カードオブジェクト消去
+        foreach (CardScript card in _cardInstances)
+        {
+            Destroy(card.gameObject);
+        }
+        //各リストを初期化
+        _cardInstances.Clear();
+        _selectingBonus.Clear();
+
+        //戦闘結果画面オブジェクト非アクティブ化
+        gameObject.SetActive(false);
+        //ステージ進行再開
+        _battleManager.ProgressingStage();
+
+
     }
     /// <summary>
     /// 選択したカードのボーナス効果の適用および入手を行う
@@ -207,6 +236,30 @@ public class RewardScript : MonoBehaviour
     /// <param name="targetCard">獲得対象カード</param>
     private void ApplyBonus(CardScript targetCard)
     {
-        PlayerDeckDataScript.ChangeStorageCardNum(targetCard.GetCardData.GetSerialNum, 1);
+        //経験値獲得
+        int valueEXP = targetCard.GetEffectValue(CardEffectDefineScript.CardEffect.Bonus_EXP);
+        if (valueEXP > 0)
+        {
+            DataScript._date.ChangePlayerEXP(valueEXP);
+            _battleManager.ApplyEXPText();
+        }
+        //金貨獲得
+        int valueGold = targetCard.GetEffectValue(CardEffectDefineScript.CardEffect.Bonus_Gold);
+        if (valueGold > 0)
+        {
+            DataScript._date.ChangePlayerGold(valueGold);
+            _battleManager.ApplyGoldText();
+        }
+        //体力回復
+        int valueHeal = targetCard.GetEffectValue(CardEffectDefineScript.CardEffect.Bonus_Heal);
+        if (valueHeal > 0)
+        {
+            _battleManager.GetCharacterManager.ChangeStatus_NowHP(CardScript.CharaID_Player, valueHeal);
+        }
+        //上記のいずれの効果も持っていない場合はプレイヤーが入手するカードとして扱う
+        if (valueEXP < 0 && valueGold < 0 && valueHeal < 0)
+        {
+            PlayerDeckDataScript.ChangeStorageCardNum(targetCard.GetCardData.GetSerialNum, 1);
+        }
     }
 }

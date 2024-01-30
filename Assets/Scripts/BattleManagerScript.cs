@@ -37,13 +37,13 @@ public class BattleManagerScript : MonoBehaviour
     private StageClearScript _stageClear = default;
     [SerializeField, Header("ゲームオーバークラス")]
     private GameOverScript _gameOver = default;
-    // プレイヤーデータUI
+    //プレイヤーデータUI
     [SerializeField, Header("経験値量Text")]
-    private Text _playerEXPText = default;
+    private Text _playerExpText = default;
     [SerializeField, Header("所持金貨Text")]
     private Text _playerGoldText = default;
     //経験値量Text表示用変数
-    private int _playerEXPDisp = default;
+    private int _playerExpDisp = default;
     //所持金貨Text表示用変数
     private int _playerGoldDisp = default; 
 
@@ -94,7 +94,7 @@ public class BattleManagerScript : MonoBehaviour
         ApplyGoldText();
         //ステージ情報表示
         ApplyStageUIs();
-        //(デバッグ用)敵を画面に出現させる
+        //敵を画面に出現させる
         DOVirtual.DelayedCall(
             1.0f, // 1秒遅延
             () =>
@@ -261,10 +261,10 @@ public class BattleManagerScript : MonoBehaviour
     {
         //少しずつ数字が変化する演出
         DOTween.To(() =>
-            _playerEXPDisp, (n) => _playerEXPDisp = n, DataScript._date.GetPlayerExp, AnimationTime)
+            _playerExpDisp, (n) => _playerExpDisp = n, DataScript._date.GetPlayerExp, AnimationTime)
             .OnUpdate(() =>
             {
-                _playerEXPText.text = _playerEXPDisp.ToString("#,0") + " EXP";
+                _playerExpText.text = _playerExpDisp.ToString("#,0") + " EXP";
             });
     }
     /// <summary>

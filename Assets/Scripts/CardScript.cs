@@ -57,7 +57,7 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     //キャラクターID:(無し)
     public const int CharaID_None = -1;
     //キャラクターID:ボーナス用
-    public const int CharaID_Bonus = 2;	
+    public const int CharaID_Bonus = 2;
     //カードアイコンの最大数
     private const int MaxIcons = 6;
     //カード効果の最大数
@@ -232,7 +232,7 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         {
             _fieldAreaScript.EndDragging();
         }
-            
+
     }
     /// <summary>
 	/// プレイヤーが保管中のカード数量を表示(デッキ編集時用)
@@ -252,7 +252,26 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     #endregion
 
     #region パラメータ変更
-
+    /// <summary>
+    /// カードの効果値を増減する
+    /// </summary>
+    /// <param name="effectType">対象効果データ</param>
+    /// <param name="value">変化量</param>
+    public void EnhanceCardEffect(CardEffectDefineScript.CardEffect effectType, int value)
+    {
+        for (int i = 0; i < _cardEffects.Count; i++)
+        {
+            //対象効果が存在するか
+            if (_cardEffects[i].GetEffect == effectType)
+            {
+                //効果値を変更
+                _cardEffects[i].GetValue += value;
+                //UI表示
+                _cardUI.ApplyCardEffectText(_cardEffects[i]);
+                return;
+            }
+        }
+    }
     /// <summary>
 	/// 合成によってカード効果を追加する
 	/// </summary>
@@ -409,6 +428,22 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         }
         //ない場合はfalseを返す
         return false;
+    }
+    /// <summary>
+	/// 効果リストの中に該当の効果種が存在する場合その効果量を返す
+	/// </summary>
+	public int GetEffectValue(CardEffectDefineScript.CardEffect effectType)
+    {
+        //該当する効果があれば効果量を返す
+        foreach (CardEffectDefineScript effect in _cardEffects)
+        {
+            if (effect.GetEffect == effectType)
+            {
+                return effect.GetValue;
+            }
+        }
+        //ない場合は-1を返す
+        return -1;
     }
     #endregion
 }

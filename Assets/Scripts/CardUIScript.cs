@@ -81,6 +81,7 @@ public class CardUIScript : MonoBehaviour
         {
             _cardBackImage.sprite = _cardBackSpriteEnemy;
         }
+        //ボーナスの時
         else if (cardControllerChara == CardScript.CharaID_Bonus)
         {
             _cardBackImage.sprite = _cardBackSpriteBonus;

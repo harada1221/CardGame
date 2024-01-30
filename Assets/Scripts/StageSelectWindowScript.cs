@@ -38,7 +38,7 @@ public class StageSelectWindowScript : MonoBehaviour
         //QÆæ“¾
         this._titleManager = titleManager;
         _windowRectTransform = GetComponent<RectTransform>();
-        // •Ï”‰Šú‰»
+        //•Ï”‰Šú‰»
         _stageListNum = DataScript._date.GetStageSOs.Count;
         _selectStageID = 0;
 

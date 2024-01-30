@@ -31,6 +31,7 @@ MonoBehaviour:
     placeCardData2: {fileID: 11400000, guid: abc6e254ae2eff543a0cdd0e55ca5f0c, type: 2}
     placeCardData3: {fileID: 11400000, guid: abc6e254ae2eff543a0cdd0e55ca5f0c, type: 2}
     placeCardData4: {fileID: 11400000, guid: abc6e254ae2eff543a0cdd0e55ca5f0c, type: 2}
-  _bonusOptions: 0
-  _bonusPoint: 0
-  _bonusCardList: []
+  _bonusOptions: 4
+  _bonusPoint: 1
+  _bonusCardList:
+  - {fileID: 11400000, guid: b6f1e2bdbadbba6448cd4a6c48075c1f, type: 2}

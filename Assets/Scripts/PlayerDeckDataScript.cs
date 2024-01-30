@@ -8,7 +8,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-
 public class PlayerDeckDataScript : MonoBehaviour
 {
     [SerializeField, Header("プレイヤー側カード全部のリスト")]
@@ -27,7 +26,9 @@ public class PlayerDeckDataScript : MonoBehaviour
     public Dictionary<int, int> GetStorageCardList { get => _storageCardList; }
     public List<CardDataSO> GetAllPlayerCardsList { get => _allPlayerCardsList; }
 
-    // 初期化処理
+   /// <summary>
+   /// 初期化処理
+   /// </summary>
     public void Init()
     {
         //プレイヤー側全カードデータと通し番号を紐づける
@@ -38,7 +39,7 @@ public class PlayerDeckDataScript : MonoBehaviour
         }
         //保管中カード情報クリア
         _storageCardList = new Dictionary<int, int>();
-        foreach (var playerCard in _allPlayerCardsList)
+        foreach (CardDataSO playerCard in _allPlayerCardsList)
         {
             _storageCardList.Add(playerCard.GetSerialNum, 0);
         }
