@@ -55,7 +55,7 @@ public class FieldAreaManagerScript : MonoBehaviour
 
     //rayの長さ
     private const float _rayDistance = 10.0f;
-    // ドロー間の時間間隔
+    //ドロー間の時間間隔
     private const float _drawIntervalTime = 0.1f;
     //色を変えるデッキ枚数
     private const int _sufficientLine = 10;
@@ -137,8 +137,8 @@ public class FieldAreaManagerScript : MonoBehaviour
 	/// </summary>
 	public void OnTurnStarting()
     {
-        //カードのドロー枚数決定
-        int nextHandCardsNum = 5;// 手札枚数
+        //手札所持枚数
+        int nextHandCardsNum = DataScript._date.GetPlayerHandNum;
         //ドロー処理
         DrawCardsUntilNum(nextHandCardsNum);
         ishandSort = true;

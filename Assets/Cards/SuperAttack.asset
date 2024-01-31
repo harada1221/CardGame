@@ -13,10 +13,8 @@ MonoBehaviour:
   m_Name: SuperAttack
   m_EditorClassIdentifier: 
   _serialNum: 10
-  _cardName: "\u9023\u7D9A\u5207\u308A"
+  _cardName: "\u5F37\u5207\u308A"
   _effectList:
   - _cardEffect: 0
-    _value: 8
-  - _cardEffect: 0
-    _value: 8
+    _value: 10
   _force: 9

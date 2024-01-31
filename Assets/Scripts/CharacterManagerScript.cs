@@ -17,8 +17,6 @@ public class CharacterManagerScript : MonoBehaviour
     private StatusUIScript _playerStatusUI = default;
     [SerializeField, Header("敵ステータス")]
     private StatusUIScript _enemyStatusUI = default;
-    [SerializeField, Header("初期HP")]
-    private int _fastHP = 30;
 
     //戦闘のマネージャー
     private BattleManagerScript _battleManager = default;
@@ -88,7 +86,8 @@ public class CharacterManagerScript : MonoBehaviour
 	public void ResetHP_Player()
     {
         //HP初期化
-        _maxHP[CardScript.CharaID_Player] = _fastHP;
+        //プレイヤーの最大HP
+        _maxHP[CardScript.CharaID_Player] = DataScript._date.GetPlayerMaxHP; 
         _nowHP[CardScript.CharaID_Player] = _maxHP[CardScript.CharaID_Player];
         //HP表示
         _playerStatusUI.SetHPView(_nowHP[CardScript.CharaID_Player], _maxHP[CardScript.CharaID_Player]);
@@ -275,8 +274,8 @@ public class CharacterManagerScript : MonoBehaviour
 	/// </summary>
 	public void RecoverMaxHP_Player()
     {
-        //カリオペHP
-        _maxHP[CardScript.CharaID_Player] = 30;
+        //プレイヤーの最大HP
+        _maxHP[CardScript.CharaID_Player] = DataScript._date.GetPlayerMaxHP;
         //大きかったら最大値にする
         if (_nowHP[CardScript.CharaID_Player] > _maxHP[CardScript.CharaID_Player])
         {

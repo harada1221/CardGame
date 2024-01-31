@@ -350,7 +350,7 @@ MonoBehaviour:
   _enemyPicturePrefab: {fileID: 92622251136115384, guid: 4f7dd4232f757c046987792666a57890, type: 3}
   _playerStatusUI: {fileID: 893900116}
   _enemyStatusUI: {fileID: 801297692}
-  _fastHP: 100
+  _fastHP: 20
 --- !u!114 &16237448
 MonoBehaviour:
   m_ObjectHideFlags: 0
