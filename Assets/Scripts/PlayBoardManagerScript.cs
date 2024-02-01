@@ -126,7 +126,7 @@ public class PlayBoardManagerScript : MonoBehaviour
                 {
                     _fieldManager.DestroyCardObject(card);
                 }
-                   
+
             }
             //ターン終了処理呼出
             _battleManager.TurnEnd();
@@ -158,7 +158,7 @@ public class PlayBoardManagerScript : MonoBehaviour
                     if (effect.GetValue != targetCard.GetForcePoint)
                     {
                         //カード強度が指定の数値と異なるなら全ての効果を無効
-                        return false; 
+                        return false;
                     }
                     break;
 
@@ -167,14 +167,14 @@ public class PlayBoardManagerScript : MonoBehaviour
                     {
                         //カード強度が指定の範囲外なら全ての効果を無効
                         return false;
-                    }                    
+                    }
                     break;
 
                 case CardEffectDefineScript.CardEffect.ForceLess: // 強度n以下
                     if (effect.GetValue < targetCard.GetForcePoint)
                     {
                         //カード強度が指定の範囲外なら全ての効果を無効
-                        return false; 
+                        return false;
                     }
                     break;
                     #endregion
@@ -238,7 +238,7 @@ public class PlayBoardManagerScript : MonoBehaviour
                     break;
 
                 case CardEffectDefineScript.CardEffect.SelfPredation: // 自己捕食
-                                                                // HP最大値半減
+                                                                      // HP最大値半減
                     selfBurnPoint += _characterManager.GetMaxHP[useCharaID] / 2;
                     // 回復
                     healPoint += _characterManager.GetMaxHP[useCharaID] - _characterManager.GetNowHP[useCharaID];
@@ -284,7 +284,7 @@ public class PlayBoardManagerScript : MonoBehaviour
 	/// </summary>
 	public bool IsPlayingCards()
     {
-        if (_playSequence != null)
+        if (_playSequence != null && _playSequence.IsActive() && _playSequence.IsPlaying())
         {
             return _playSequence.IsPlaying();
         }

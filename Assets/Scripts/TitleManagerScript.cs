@@ -20,6 +20,8 @@ public class TitleManagerScript : MonoBehaviour
     private DeckEditWindowScript _deckEditWindow = default;
     [SerializeField, Header("訓練場ウィンドウクラス")] 
     private TrainingWindowScript _trainingWindow = default;
+    [SerializeField,Header("ショップウィンドウクラス")] 
+    private ShoppingWindowScript _shoppingWindow = default;
 
     //各種ボタン関連UIのX方向移動量
     private const float ButtonsUIMoveLengthX = 400.0f;
@@ -38,6 +40,7 @@ public class TitleManagerScript : MonoBehaviour
         _stageSelectWindow.Init(this);
         _deckEditWindow.Init(this);
         _trainingWindow.Init(this);
+        _shoppingWindow.Init(this);
 
         //ゲーム起動時のアニメーションを再生
         //InitAnimation();

@@ -12,7 +12,7 @@ using UnityEngine.UI;
 
 public class CardZoneScript : MonoBehaviour
 {
-    // ƒ][ƒ“í—Ş’è‹`
+    //ƒ][ƒ“í—Ş’è‹`
     public enum ZoneType
     {
         //èD

@@ -1,10 +1,13 @@
+//-----------------------------------------------------------------------
+/* カードパックデータ定義クラス
+ * 
+ * 制作者　原田　智大
+ * 制作日　1月15日
+ *--------------------------------------------------------------------------- 
+*/
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-/// <summary>
-/// カードパックデータ定義クラス
-/// </summary>
 [CreateAssetMenu(fileName = "CardPack", menuName = " ScriptableObjects/CardPack")]
 public class CardPackSO : ScriptableObject
 {
