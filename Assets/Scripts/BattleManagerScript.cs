@@ -20,7 +20,6 @@ public class BattleManagerScript : MonoBehaviour
     private RewardScript _rewardPanel = default;
     [SerializeField, Header("カード効果発動管理クラス")]
     private PlayBoardManagerScript _playBoardManager = default;
-
     [SerializeField, Header("ステージ名")]
     private Text _stageNameText = default;
     [SerializeField, Header("ステージアイコン")]
@@ -46,7 +45,6 @@ public class BattleManagerScript : MonoBehaviour
     private int _playerExpDisp = default;
     //所持金貨Text表示用変数
     private int _playerGoldDisp = default;
-
     //現在の経過ターン
     private int _nowTurns = default;
     //現在のステージ進行度
@@ -169,7 +167,6 @@ public class BattleManagerScript : MonoBehaviour
             {
                 //フィールド側戦闘開始時処理
                 _fieldAreaScript.OnBattleStarting();
-
                 //ターン開始時処理
                 TurnStart();
             }, false
@@ -225,10 +222,8 @@ public class BattleManagerScript : MonoBehaviour
                     }
                 }
             );
-
             return;
         }
-
         //次のターン開始
         TurnStart();
     }
@@ -242,13 +237,10 @@ public class BattleManagerScript : MonoBehaviour
     {
         //ステージ名
         _stageNameText.text = _stageSO.GetStageName;
-
         //ステージアイコン
         _stageIconImage.sprite = _stageSO.GetStageIcon;
-
         //ステージ背景
         _stageBackGroundImage.sprite = _stageSO.GetStageBackGround;
-
         //ステージ進行度ゲージ初期化
         _progressGageImage.fillAmount = 0.0f;
     }

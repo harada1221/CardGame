@@ -25,7 +25,6 @@ public class FieldAreaManagerScript : MonoBehaviour
     private Button _cardPlayButton = default;
     [SerializeField, Header("デッキ補充ボタン")]
     private Image _replenishButtonImage = default;
-
     //カード関連
     [SerializeField, Header("カードのプレハブ")]
     private GameObject _cardPrefab = default;
@@ -342,7 +341,7 @@ public class FieldAreaManagerScript : MonoBehaviour
                 DrawCard(nowHandNum);
                 nowHandNum++;
             });
-            // 時間間隔をSequenceに追加
+            //時間間隔をSequenceに追加
             drawSequence.AppendInterval(_drawIntervalTime);
         }
         drawSequence.OnComplete(() => isDraw = false);
@@ -354,7 +353,7 @@ public class FieldAreaManagerScript : MonoBehaviour
     {
         //手札内番号
         int index = 0;
-        // ダミー手札を整列
+        //ダミー手札を整列
         _dammyHand.ApplyLayout();
         //各カードをダミー手札に合わせて移動
         foreach (CardScript card in _cardInstances)

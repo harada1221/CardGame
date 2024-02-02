@@ -126,8 +126,8 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     /// <summary>
     /// カードのパラメータを取得する
     /// </summary>
-    /// <param name="cardData"></param>
-    /// <param name="ControllerCharaID"></param>
+    /// <param name="cardData">カードデータ</param>
+    /// <param name="ControllerCharaID">使用者</param>
     public void SetInitialCardData(CardDataSO cardData, int ControllerCharaID)
     {
         //カードデータ取得

@@ -40,7 +40,8 @@ public class TrainingWindowScript : MonoBehaviour
     private const float WindowAnimTime = 0.3f;
 
     //定数定義
-    public const int InitPlayerHandNum = 5; // プレイヤーの初期手札枚数
+    //プレイヤーの初期手札枚数
+    public const int InitPlayerHandNum = 5; 
 
     /// <summary>
     /// 初期化処理
@@ -110,7 +111,7 @@ public class TrainingWindowScript : MonoBehaviour
         _windowTween = _windowRectTransform.DOScale(1.0f, WindowAnimTime).SetEase(Ease.OutBack);
         //ウィンドウ背景パネルを有効化
         _titleManager.SetWindowBackPanelActive(true);
-        //画面スクロールを初期値に戻す(次のOnGUIで実行)
+        //画面スクロールを初期値に戻す
         isReservResetScrollBar = true;
     }
     /// <summary>
