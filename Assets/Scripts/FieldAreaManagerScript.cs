@@ -5,7 +5,6 @@
  * 制作日　12月１日
  *--------------------------------------------------------------------------- 
 */
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -295,6 +294,8 @@ public class FieldAreaManagerScript : MonoBehaviour
 
         //デッキ残り枚数表示
         PrintPlayerDeckNum();
+        //音を鳴らす
+        SEManagerScript.instance.PlaySE(SEManagerScript.SEName.DrawCard);
     }
 
     /// <summary>

@@ -105,10 +105,6 @@ public class PlayBoardManagerScript : MonoBehaviour
                     }
                 });
             }
-            else
-            {//カードが存在しない
-            }
-
             //時間間隔を設定
             _playSequence.AppendInterval(PlayIntervalTime);
         }
@@ -145,9 +141,6 @@ public class PlayBoardManagerScript : MonoBehaviour
         int weakPoint = 0;      //ダメージ弱体化量
         int damageMulti = 1;    //ダメージ倍率
         bool isAbsorption = false;  //体力吸収フラグ
-        //bool isBloodPact = false;   //回復⇔ダメージ変更フラグ
-        //bool isReflection = false;  //反動ダメージフラグ
-
         //カード内のそれぞれの効果を実行
         foreach (CardEffectDefineScript effect in targetCard.GetCardEffects)
         {
@@ -276,7 +269,20 @@ public class PlayBoardManagerScript : MonoBehaviour
         {
             _characterManager.ChangeStatus_NowHP(useCharaID, damagePoint);
         }
-
+        // ダメージが発生するならSE再生
+        if (damagePoint > 0 || burnPoint > 0)
+        {
+            //敵へのダメージ
+            if (useCharaID == CardScript.CharaID_Player)
+            {
+                SEManagerScript.instance.PlaySE(SEManagerScript.SEName.DamageToEnemy);
+            }
+            //プレイヤーへのダメージ
+            else
+            {
+                SEManagerScript.instance.PlaySE(SEManagerScript.SEName.DamageToPlayer);
+            }
+        }
         return true;
     }
     /// <summary>

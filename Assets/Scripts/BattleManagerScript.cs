@@ -45,7 +45,7 @@ public class BattleManagerScript : MonoBehaviour
     //経験値量Text表示用変数
     private int _playerExpDisp = default;
     //所持金貨Text表示用変数
-    private int _playerGoldDisp = default; 
+    private int _playerGoldDisp = default;
 
     //現在の経過ターン
     private int _nowTurns = default;
@@ -96,12 +96,18 @@ public class BattleManagerScript : MonoBehaviour
         ApplyStageUIs();
         //敵を画面に出現させる
         DOVirtual.DelayedCall(
-            1.0f, // 1秒遅延
+            1.0f, //1秒遅延
             () =>
             {
                 ProgressingStage();
             }, false
         );
+        //ステージBGM再生
+        AudioSource audioSource = GetComponent<AudioSource>();
+        //BGMクリップ設定
+        audioSource.clip = _stageSO.GetBGM;
+        //再生
+        audioSource.Play(); 
     }
 
     #region ステージ進行関連
@@ -156,7 +162,7 @@ public class BattleManagerScript : MonoBehaviour
             _bossIncoming.StartAnimation();
         }
 
-        //戦闘開始処理(遅延実行)
+        //戦闘開始処理
         DOVirtual.DelayedCall(
             1.0f,
             () =>

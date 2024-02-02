@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------
-/* ステージ進行を管理するクラス
+/* ステージデータを管理するクラス
  * 
  * 制作者　原田　智大
  * 制作日　12月１日
@@ -22,6 +22,8 @@ public class StageSO : ScriptableObject
     private Sprite _stageIcon = default;
     [SerializeField, Header("ステージ背景画像")]
     private Sprite _stageBackGround = default;
+    [SerializeField, Header("ステージBGM")]
+    private AudioClip _stageBGM = default;
 
     [Space(10)]
     [SerializeField, Header("各進行度別の敵の出現テーブル")]
@@ -38,6 +40,7 @@ public class StageSO : ScriptableObject
     public string GetStageName { get => _stageName; }
     public Sprite GetStageIcon { get => _stageIcon; }
     public Sprite GetStageBackGround { get => _stageBackGround; }
+    public AudioClip GetBGM { get => _stageBGM; }
     public string GetDifficulty { get => _difficulty; }
     public int GetExp { get => _bonus_EXP; }
     public int GetGold { get => _bonus_Gold; }

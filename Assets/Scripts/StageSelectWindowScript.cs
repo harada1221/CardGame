@@ -66,6 +66,8 @@ public class StageSelectWindowScript : MonoBehaviour
         _titleManager.SetWindowBackPanelActive(true);
         //ステージ情報表示
         ShowStageDatas();
+        //SE再生
+        SEManagerScript.instance.PlaySE(SEManagerScript.SEName.DecideA);
     }
     /// <summary>
     /// ウィンドウを非表示にする
@@ -84,6 +86,8 @@ public class StageSelectWindowScript : MonoBehaviour
             .SetEase(Ease.InBack);
         //ウィンドウ背景パネルを非表示
         _titleManager.SetWindowBackPanelActive(false);
+        //SE再生
+        SEManagerScript.instance.PlaySE(SEManagerScript.SEName.DecideA);
     }
     /// <summary>
 	/// １つ左側(マイナス方向)のステージに切り替えるボタン
@@ -98,6 +102,8 @@ public class StageSelectWindowScript : MonoBehaviour
         }
         //選択中ステージ情報表示
         ShowStageDatas();
+        //SE再生
+        SEManagerScript.instance.PlaySE(SEManagerScript.SEName.DecideA);
     }
     /// <summary>
     /// １つ右側(プラス方向)のステージに切り替えるボタン
@@ -112,6 +118,8 @@ public class StageSelectWindowScript : MonoBehaviour
         }
         //選択中ステージ情報表示
         ShowStageDatas();
+        //SE再生
+        SEManagerScript.instance.PlaySE(SEManagerScript.SEName.DecideA);
     }
 
     /// <summary>
@@ -152,11 +160,12 @@ public class StageSelectWindowScript : MonoBehaviour
     /// <param name="isWithTutorial">true:チュートリアル有りで開始する</param>
     public void StageStartButton(bool isWithTutorial)
     {
-        // 選択したステージ番号を記憶
+        //選択したステージ番号を記憶
         DataScript._date._nowStageID = _selectStageID;
-        // シーン切り替え
+        //シーン切り替え
         SceneManager.LoadScene(_nextSceneName);
-
+        //SE再生
+        SEManagerScript.instance.PlaySE(SEManagerScript.SEName.DecideB);
 
     }
 }
