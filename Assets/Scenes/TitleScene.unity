@@ -1032,6 +1032,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6070790883079588689, guid: 1ca780068076fc24b83ff2287b2de38c, type: 3}
+      propertyPath: _seClips.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 4908c592406580548825528a58414b72, type: 3}
+    - target: {fileID: 6070790883079588689, guid: 1ca780068076fc24b83ff2287b2de38c, type: 3}
+      propertyPath: _seClips.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: 074bed51dc2f1f84c887e79ac3ae65a3, type: 3}
+    - target: {fileID: 6070790883079588689, guid: 1ca780068076fc24b83ff2287b2de38c, type: 3}
+      propertyPath: _seClips.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: 49e6c0dda62f79e47b9cf2aae9e246bf, type: 3}
+    - target: {fileID: 6070790883079588689, guid: 1ca780068076fc24b83ff2287b2de38c, type: 3}
+      propertyPath: _seClips.Array.data[3]
+      value: 
+      objectReference: {fileID: 8300000, guid: 49e6c0dda62f79e47b9cf2aae9e246bf, type: 3}
+    - target: {fileID: 6070790883079588689, guid: 1ca780068076fc24b83ff2287b2de38c, type: 3}
+      propertyPath: _seClips.Array.data[4]
+      value: 
+      objectReference: {fileID: 8300000, guid: 5cfaa366a1787ea4e99c22dff2dcb2cf, type: 3}
     - target: {fileID: 7037981269430038199, guid: 1ca780068076fc24b83ff2287b2de38c, type: 3}
       propertyPath: _allPlayerCardsList.Array.size
       value: 8
@@ -1599,7 +1619,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: f006bf0fdb89dd146b572facee94a51a, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.5
   m_Pitch: 1

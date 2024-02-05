@@ -113,6 +113,8 @@ public class TrainingWindowScript : MonoBehaviour
         _titleManager.SetWindowBackPanelActive(true);
         //画面スクロールを初期値に戻す
         isReservResetScrollBar = true;
+        //SE再生
+        SEManagerScript.instance.PlaySE(SEManagerScript.SEName.DecideA);
     }
     /// <summary>
     /// ウィンドウを非表示にする
@@ -124,10 +126,13 @@ public class TrainingWindowScript : MonoBehaviour
         {
             _windowTween.Kill();
         }
+        //SE再生
+        SEManagerScript.instance.PlaySE(SEManagerScript.SEName.DecideA);
         //ウィンドウ非表示Tween
         _windowTween = _windowRectTransform.DOScale(0.0f, WindowAnimTime).SetEase(Ease.InBack);
         //ウィンドウ背景パネルを無効化
         _titleManager.SetWindowBackPanelActive(false);
+
     }
 
     /// <summary>

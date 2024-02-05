@@ -16,6 +16,7 @@ MonoBehaviour:
   _difficulty: "\u666E\u901A"
   _stageIcon: {fileID: 21300000, guid: 8208f45595f7c9e4485fbece459ff854, type: 3}
   _stageBackGround: {fileID: 21300000, guid: ed0896c65eca8a44aac8d4ead6cb3115, type: 3}
+  _stageBGM: {fileID: 8300000, guid: 1187f5f386844fd47b09c79d269270bf, type: 3}
   _appearEnemyTables:
   - _appearEnemys:
     - {fileID: 11400000, guid: 6b03d1d7c643c5c4e97da07314cb478d, type: 2}

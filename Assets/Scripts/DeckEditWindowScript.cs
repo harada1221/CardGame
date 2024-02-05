@@ -90,6 +90,8 @@ public class DeckEditWindowScript : MonoBehaviour
         //カードリスト整列
         AlignDeckList();
         AlignStorageList();
+        //SE再生
+        SEManagerScript.instance.PlaySE(SEManagerScript.SEName.DecideA);
     }
     /// <summary>
     /// ウィンドウを非表示にする
@@ -98,6 +100,8 @@ public class DeckEditWindowScript : MonoBehaviour
     {
         //終了処理
         DeselectCard();
+        //SE再生
+        SEManagerScript.instance.PlaySE(SEManagerScript.SEName.DecideA);
         gameObject.SetActive(false);
     }
 

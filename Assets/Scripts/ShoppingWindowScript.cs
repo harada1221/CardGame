@@ -93,7 +93,9 @@ public class ShoppingWindowScript : MonoBehaviour
         _windowTween = _windowRectTransform.DOScale(1.0f, _WindowAnimTime).SetEase(Ease.OutBack);
         //ウィンドウ背景パネルを有効化
         _titleManager.SetWindowBackPanelActive(true);
-        //画面スクロールを初期値に戻す(次のOnGUIで実行)
+        //SE再生
+        SEManagerScript.instance.PlaySE(SEManagerScript.SEName.DecideA);
+        //画面スクロールを初期値に戻す
         _reservResetScrollBar = true;
     }
     /// <summary>
@@ -105,6 +107,8 @@ public class ShoppingWindowScript : MonoBehaviour
         {
             _windowTween.Kill();
         }
+        //SE再生
+        SEManagerScript.instance.PlaySE(SEManagerScript.SEName.DecideA);
         //ウィンドウ非表示Tween
         _windowTween = _windowRectTransform.DOScale(0.0f, _WindowAnimTime).SetEase(Ease.InBack);
         //ウィンドウ背景パネルを無効化

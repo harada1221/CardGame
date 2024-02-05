@@ -228,8 +228,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _seClips:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 8300000, guid: 4908c592406580548825528a58414b72, type: 3}
+  - {fileID: 8300000, guid: 074bed51dc2f1f84c887e79ac3ae65a3, type: 3}
+  - {fileID: 8300000, guid: 49e6c0dda62f79e47b9cf2aae9e246bf, type: 3}
+  - {fileID: 8300000, guid: 49e6c0dda62f79e47b9cf2aae9e246bf, type: 3}
+  - {fileID: 8300000, guid: 5cfaa366a1787ea4e99c22dff2dcb2cf, type: 3}
