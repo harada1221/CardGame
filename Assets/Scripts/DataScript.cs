@@ -24,12 +24,10 @@ public class DataScript : MonoBehaviour
     public int _nowStageID = default;
     //プレイヤーデータ
     //所持金貨
+    [SerializeField]
     private int _playerGold = default;
     //獲得済み経験値
     private int _playerEXP = default;
-
-
-
     public int GetNowStageID { get => _nowStageID; }
     public int SetNowStageID { set { _nowStageID = value; } }
     public List<StageSO> GetStageSOs { get => _stageSOs; }

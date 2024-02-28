@@ -17,7 +17,6 @@ public class StatusUIScript : MonoBehaviour
     private Image _hpGageImage = default;
     [SerializeField, Header("HP表示Text")]
     private Text _hpText = default;
-
     //敵キャラクター用パラメータ
     [Space(10)]
     [Header("敵キャラクター用")]

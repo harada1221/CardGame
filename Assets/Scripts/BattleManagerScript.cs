@@ -61,8 +61,6 @@ public class BattleManagerScript : MonoBehaviour
     private const float BonusRandomMulti_Min = 0.8f;
     //ボーナス量のランダム幅:最大
     private const float BonusRandomMulti_Max = 1.4f;
-
-
     public FieldAreaManagerScript GetFieldManager { get => _fieldAreaScript; }
     public CharacterManagerScript GetCharacterManager { get => _characterManager; }
     public PlayBoardManagerScript GetPlayBoardManager { get => _playBoardManager; }

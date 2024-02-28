@@ -304,7 +304,7 @@ public class CardScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                     break;
                 }
             case CardEffectDefineScript.EffectCompoMode.OnlyOwn_New:
-                // 自分とカードとのみ合成可能(新規のみ)
+                //自分とカードとのみ合成可能(新規のみ)
                 if (isEnemyCard)
                 {
                     return;
