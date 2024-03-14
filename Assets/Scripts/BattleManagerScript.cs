@@ -191,7 +191,7 @@ public class BattleManagerScript : MonoBehaviour
         //CharacterManager側終了時処理呼出
         _characterManager.OnTurnEnd();
 
-        // 戦闘終了を確認
+        //戦闘終了を確認
         bool isPlayerWin = _characterManager.IsEnemyDefeated();
         bool isPlayerLose = _characterManager.IsPlayerDefeated();
 
@@ -206,13 +206,13 @@ public class BattleManagerScript : MonoBehaviour
                 0.5f,
                 () =>
                 {
-                    // プレイヤー敗北時
+                    //プレイヤー敗北時
                     if (isPlayerLose)
                     {
                         //ゲームオーバー演出開始
                         _gameOver.StartAnimation();
                     }
-                    // プレイヤー勝利時
+                    //プレイヤー勝利時
                     else if (isPlayerWin)
                     {
                         //勝利画面表示

@@ -986,7 +986,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2793430039030213885, guid: 1ca780068076fc24b83ff2287b2de38c, type: 3}
       propertyPath: _playerGold
-      value: 10000
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3641255581392323535, guid: 1ca780068076fc24b83ff2287b2de38c, type: 3}
       propertyPath: m_Name
