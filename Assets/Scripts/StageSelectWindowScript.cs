@@ -14,13 +14,17 @@ public class StageSelectWindowScript : MonoBehaviour
     private Text _battleNumText = default;
     [SerializeField, Header("ステージアイコンImage")]
     private Image _stageIconImage = default;
-    [SerializeField, Header("選択中ステージ番号ドット")]
-    private List<Image> _stageOrderImages = null;
     [SerializeField, Header("戦闘シーン名")]
     private string _nextSceneName = default;
+    [SerializeField, Header("ステージ数アイコン")]
+    private Image _stageIcon = default;
+    [SerializeField, Header("アイコン制作の親オブジェクト")]
+    private Transform _stageIconParent = default;
 
     //ステージの総数
     private int _stageListNum = default;
+    //選択可能ステージイメージ
+    private List<Image> _stageOrderImages = default;
     //選択中ステージID
     private int _selectStageID = default;
     //タイトル管理クラス
@@ -35,12 +39,22 @@ public class StageSelectWindowScript : MonoBehaviour
     //初期化関数(TitleManager.csから呼出)
     public void Init(TitleManagerScript titleManager)
     {
+
         //参照取得
         this._titleManager = titleManager;
         _windowRectTransform = GetComponent<RectTransform>();
         //変数初期化
         _stageListNum = DataScript._date.GetStageSOs.Count;
+        _stageOrderImages = new List<Image>();
         _selectStageID = 0;
+        //アイコン制作
+        Image image;
+        for (int i = 0; i < _stageListNum; i++)
+        {
+            image = Instantiate(_stageIcon, _stageIconParent);
+            //リストに格納
+            _stageOrderImages.Add(image);
+        }
 
         //ウィンドウ非表示
         _windowRectTransform.transform.localScale = Vector2.zero;
