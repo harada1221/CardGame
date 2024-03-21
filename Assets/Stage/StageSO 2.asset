@@ -12,12 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 533d33ad49cc54a4ca3d1400207238d7, type: 3}
   m_Name: StageSO 2
   m_EditorClassIdentifier: 
-  _stageName: 
-  _difficulty: 
-  _stageIcon: {fileID: 0}
-  _stageBackGround: {fileID: 0}
-  _stageBGM: {fileID: 0}
-  _appearEnemyTables: []
-  _bonus_EXP: 0
-  _bonus_Gold: 0
-  _bonus_Heal: 0
+  _stageName: point
+  _difficulty: "\u30CF\u30FC\u30C9"
+  _stageIcon: {fileID: 21300000, guid: 970a5e4d674eded4c8696e7bbc87aa3f, type: 3}
+  _stageBackGround: {fileID: 21300000, guid: 71539ba3b6fad1248878e96a125c6722, type: 3}
+  _stageBGM: {fileID: 8300000, guid: fad54f8d70191d24fa26bcd8220a388c, type: 3}
+  _appearEnemyTables:
+  - _appearEnemys:
+    - {fileID: 11400000, guid: 81d44e59023f37c4babdb3069c6f685a, type: 2}
+    - {fileID: 11400000, guid: 6b03d1d7c643c5c4e97da07314cb478d, type: 2}
+  - _appearEnemys:
+    - {fileID: 11400000, guid: 81d44e59023f37c4babdb3069c6f685a, type: 2}
+    - {fileID: 11400000, guid: 6b03d1d7c643c5c4e97da07314cb478d, type: 2}
+  - _appearEnemys:
+    - {fileID: 11400000, guid: 9f87daf81ac8c5747b3d8bccf0c4ffdd, type: 2}
+  _bonus_EXP: 20
+  _bonus_Gold: 20
+  _bonus_Heal: 20
