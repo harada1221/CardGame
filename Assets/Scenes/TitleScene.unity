@@ -996,6 +996,10 @@ PrefabInstance:
       propertyPath: _stageSOs.Array.data[2]
       value: 
       objectReference: {fileID: 11400000, guid: 27e6616be87636540a7bb4dedfa2e147, type: 2}
+    - target: {fileID: 2793430039030213885, guid: 1ca780068076fc24b83ff2287b2de38c, type: 3}
+      propertyPath: _stageSOs.Array.data[3]
+      value: 
+      objectReference: {fileID: 11400000, guid: 8970f84bd7061144c8f56944fc05b946, type: 2}
     - target: {fileID: 3641255581392323535, guid: 1ca780068076fc24b83ff2287b2de38c, type: 3}
       propertyPath: m_Name
       value: DataManager

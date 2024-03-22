@@ -17,7 +17,9 @@ MonoBehaviour:
   _stageIcon: {fileID: 0}
   _stageBackGround: {fileID: 0}
   _stageBGM: {fileID: 0}
-  _appearEnemyTables: []
+  _appearEnemyTables:
+  - _appearEnemys:
+    - {fileID: 11400000, guid: 9f87daf81ac8c5747b3d8bccf0c4ffdd, type: 2}
   _bonus_EXP: 0
   _bonus_Gold: 0
   _bonus_Heal: 0
